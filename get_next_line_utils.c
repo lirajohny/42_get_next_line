@@ -1,5 +1,49 @@
 #include "get_next_line.h"
 
+
+t_list	*ft_lstlast(t_list *lst)
+{
+	t_list	*tmp;
+
+	if (!lst)
+		return (NULL);
+	tmp = lst;
+	while (tmp->next != NULL)
+	{
+		tmp = tmp->next;
+	}
+	return (tmp);
+}
+
+t_list	*ft_lstnew(void *content)
+{
+	t_list	*new_node;
+
+	new_node = (t_list *)malloc(sizeof(t_list));
+	if (!new_node)
+		return (NULL);
+	new_node->content = content;
+	new_node->bytes_read = 0;
+	new_node->remain = NULL;
+	new_node->next = NULL;
+	return (new_node);
+}
+void	clear_list(t_list *head)
+{
+	t_list *current = head;
+	t_list *next;
+
+	while (current != NULL) 
+	{
+		next = current->next;
+		free(current->content);
+		free(current->remain);
+		free(current);
+		current = next;
+	}
+}
+
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined;
@@ -25,9 +69,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		}
 		i++;
 	}
-	joined[i] = '\0';
 	free((char *)s1);
-	free((char *)s2);
+	joined[i] = '\0';
 	return (joined);
 }
 
@@ -44,10 +87,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		return (ft_strdup(""));
 	str = malloc(sizeof(char) * (len + 1));
 	if (!str)
-	{
-	//	free(str);
 		return (NULL);
-	}
 	i = 0;
 	while (i < len && s[start + i] != '\0')
 	{
@@ -55,7 +95,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		i++;
 	}
 	str[i] = '\0';
-	free((char *)s);
 	return (str);
 }
 size_t	ft_strlen(const char *s)
@@ -78,16 +117,12 @@ char	*ft_strdup(const char *s1)
 	i = 0;
 	new_string = (char *)malloc(ft_strlen(s1) + 1);
 	if (!new_string) 
-	{
-	//	free(new_string);
 		return (NULL);
-	}
 	while (s1[i] != '\0')
 	{
 		new_string[i] = s1[i];
 		i++;
 	}
 	new_string[i] = '\0';
-	free((char *)s1);
 	return (new_string);
 }

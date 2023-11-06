@@ -17,7 +17,6 @@ int	main(void)
 		printf("%c", buffer[i]);
 		i++;
 	}
-	printf("\n -> %s \n", buffer);
 	free(buffer);
 
 	int fd;
@@ -41,6 +40,7 @@ int	main(void)
 	size_t len;
 //	write(fd_out, "teste\n", 6);
 	int k = 0;
+	printf("main\n");
 	while((str = get_next_line(fd)) != NULL)
 	{
 		printf("\n(main.c) escrito:\n%s", str);
