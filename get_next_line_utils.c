@@ -1,6 +1,9 @@
 #include "get_next_line.h"
 
 
+// TIRA ESSA PORRA
+#include <stdio.h>
+
 t_list	*ft_lstlast(t_list *lst)
 {
 	t_list	*tmp;
@@ -56,6 +59,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	j = 0;
 	len = ft_strlen(s1) + ft_strlen(s2);
+	printf("\tFUNCTION STRJOIN \t len >> %zu <<\n", len);
 	joined = malloc(sizeof(char) * len + 1);
 	if (!joined)
 		return (NULL);
@@ -69,8 +73,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		}
 		i++;
 	}
-	free((char *)s1);
 	joined[i] = '\0';
+	printf("\tFUNCTION STRJOIN \t returning >> %s <<\n", joined);
 	return (joined);
 }
 

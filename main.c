@@ -4,21 +4,12 @@
 
 int	main(void)
 {
-	int i = 0;
 	char *buffer = malloc(sizeof(char) * 10);
 	if (!buffer)
 	{
 		printf("deu ruim\n");
 		return (-1);
 	}
-	buffer = ft_strdup("testando");
-	while (buffer[i])
-	{
-		printf("%c", buffer[i]);
-		i++;
-	}
-	free(buffer);
-
 	int fd;
 	int fd_out;
 	char *str;
@@ -40,10 +31,10 @@ int	main(void)
 	size_t len;
 //	write(fd_out, "teste\n", 6);
 	int k = 0;
-	printf("main\n");
+	printf("MAIN\n");
 	while((str = get_next_line(fd)) != NULL)
 	{
-		printf("\n(main.c) escrito:\n%s", str);
+		printf("\n- END - (main.c) escrito:\n%s", str);
 		printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
 		write(fd_out, str, len);
