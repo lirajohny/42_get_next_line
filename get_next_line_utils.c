@@ -1,9 +1,5 @@
 #include "get_next_line.h"
 
-
-// TIRA ESSA PORRA
-#include <stdio.h>
-
 t_list	*ft_lstlast(t_list *lst)
 {
 	t_list	*tmp;
@@ -31,21 +27,16 @@ t_list	*ft_lstnew(void *content)
 	new_node->next = NULL;
 	return (new_node);
 }
-void	clear_list(t_list *head)
+void	clear_list(t_list *list)
 {
-	t_list *current = head;
-	t_list *next;
-
-	while (current != NULL) 
+	if (!list)
+		return ;
+	while (list)
 	{
-		next = current->next;
-		free(current->content);
-		free(current->remain);
-		free(current);
-		current = next;
+		free(list->content);
+		list = list->next;
 	}
 }
-
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
