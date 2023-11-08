@@ -34,7 +34,8 @@ t_list	*ft_lstnew(void)
 
 #include <stdio.h>
 void    clear_list(t_list *list)
-{
+{		
+	printf("CLEAR LIST FUNCTIION\n");
 	if (!list)
 		return ;
 	while (list)

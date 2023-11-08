@@ -104,7 +104,11 @@ t_list *create_node(void)
 	}
 	last = ft_lstlast(list);
 	if (last->bytes_read == 0)
+	{
+		printf("\t\t READY TO CLEAN \n");
+		clear_list(list);
 		return (NULL);
+	}
 	new = ft_lstnew();
 	printf("\t\t => last node acessed\n");
 	printf("\t\t ∑∑ byte_readi FROM LAST NODE\033[1;33m %i \033[0m ∑∑ \n", last->bytes_read);
@@ -188,11 +192,6 @@ char	*get_next_line(int fd)
 	next_line = read_file(&head, fd);
 	printf("\033[1;33m LEAVING READ_FILE \033[0m\n");
 	last_node = ft_lstlast(head);
-	if (last_node == NULL)
-	{
-		clear_list(head);
-		return (NULL);
-	}
 	printf("\033[1;32m  Returning: \033[0m |\033[1;34m %s \033[0m|\n", next_line);
 	printf("\033[1;32m  saving: \033[0m |\033[1;34m %s \033[0m|\n", head->remain);
 	printf("\033[1;33m LEAVING \033[0m\n");
