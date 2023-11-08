@@ -1,9 +1,5 @@
 #include "get_next_line.h"
 
-
-// TIRA ESSA PORRA
-#include <stdio.h>
-
 t_list	*ft_lstlast(t_list *lst)
 {
 	t_list	*tmp;
@@ -32,27 +28,20 @@ t_list	*ft_lstnew(void)
 	return (new_node);
 }
 
-#include <stdio.h>
 void    clear_list(t_list *list)
 {		
-	printf("CLEAR LIST FUNCTIION\n");
 	if (!list)
 		return ;
 	while (list)
 	{
-		printf("checking content: \033[1;96m %s\033[0m \n", list->content);
-		printf("checking remain: \033[1;96m %s \033[0m \n",  list->remain);
 		if (list->content != NULL)
 		{
-			printf("freed content\n");
 			free(list->content);
 		}
 		if (list->remain != NULL)
 		{
-			printf("freed remain\n");
 			free(list->remain);
 		}
-		printf("----------------\n");
 		//free(list);
 		list = list->next;
 	}

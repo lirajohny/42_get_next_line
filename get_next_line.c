@@ -1,11 +1,8 @@
 #include <stdlib.h> 
 #include <unistd.h> 
 #include "get_next_line.h"
-
-#include <stdio.h>
 //#include <libc.h>
 
-static int call = 1;
 char	*remain(char *buffer, int pos)
 {
 	int i;
@@ -115,7 +112,6 @@ char *read_file(t_list **list, int fd)
 	t_list	*new;
 	char *buffer;
 	int	pos;
-	int loops = 1;
 	pos = 0;
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
@@ -123,7 +119,6 @@ char *read_file(t_list **list, int fd)
 	new = ft_lstlast(*list);
 	while ((new->bytes_read = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
-		loops++;
 		buffer[new->bytes_read] = '\0';
 		pos = find_line(buffer);
 		if (pos >= 0)
@@ -140,18 +135,14 @@ char *read_file(t_list **list, int fd)
 
 char	*get_next_line(int fd)
 {
-	call++;
 	t_list	*head = NULL;
-	t_list	*last_node;
 	static char			*next_line;
 
 	head = create_node(); 
 	if (head == NULL)
 		return (NULL);
-	last_node = ft_lstlast(head);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
 	next_line = read_file(&head, fd);
-	last_node = ft_lstlast(head);
 	return (next_line);
 }
