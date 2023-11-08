@@ -27,23 +27,21 @@ t_list	*ft_lstnew(void)
 	new_node->next = NULL;
 	return (new_node);
 }
-
-t_list    *clear_list(t_list *list)
+#include <stdio.h>
+t_list    *clear_list(t_list **head)
 {		
-	if (!list)
-		return NULL;
-	while (list)
+	t_list	*curr;
+
+	curr = *head;
+	while (curr != NULL)
 	{
-		if (list->content != NULL)
-		{
-			free(list->content);
-		}
-		if (list->remain != NULL)
-		{
-			free(list->remain);
-		}
-		//free(list);
-		list = list->next;
+		t_list *aux = curr;
+		curr = curr->next;
+		free(aux->remain);
+		aux->remain = NULL;
+		free(aux->content);
+		aux->content = NULL;
+		free(aux);
 	}
 	return (NULL);
 }

@@ -20,5 +20,5 @@ size_t	ft_strlen(const char *s);
 char	*ft_strdup(const char *s1);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstnew(void);
-t_list *clear_list(t_list *head);
+t_list *clear_list(t_list **head);
 #endif

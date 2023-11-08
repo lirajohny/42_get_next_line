@@ -65,7 +65,7 @@ static int	find_line(char *str)
 
 static t_list *create_node(void)
 {
-	static t_list	*list;
+	static t_list	*list = NULL;
 	t_list *new;
 	t_list *last;
 
@@ -78,18 +78,10 @@ static t_list *create_node(void)
 	}
 	last = ft_lstlast(list);
 	if (last->bytes_read == 0)
-		return (clear_list(list));
+		return (clear_list(&list));
 	new = ft_lstnew();
 	if (last->remain != NULL)
-	{
-		if (last->bytes_read == 0 && last->content != NULL)
-		{
-			last->remain = ft_strdup(last->content);
-			last->content = NULL;
-			return (list);
-		}
 		new->content = ft_strdup(last->remain);
-	}
 	if (new->content == NULL)
 		new->content = ft_strdup("");
 	last->next = new;
@@ -119,6 +111,7 @@ static char *read_file(t_list **list, int fd)
 	}
 	if (pos != -1 && pos + 1 < new->bytes_read)
 		new->remain = remain(buffer, pos + 1);
+	free(buffer);
 	return (new->content);
 }
 
