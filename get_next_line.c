@@ -96,15 +96,18 @@ t_list *create_node(void)
 	{
 		list = malloc(sizeof(t_list));
 		list->content = ft_strdup("");
-		list->bytes_read = 0;
+		list->bytes_read = -1;
 		printf("\t => first node created :");
 		printf("contains: |\033[1;34m %s \033[0m|\n", list->content);
 		printf("\033[1;33m LEAVING \033[0m\n");
 		return list;
 	}
-	new = ft_lstnew();
 	last = ft_lstlast(list);
+	if (last->bytes_read == 0)
+		return (NULL);
+	new = ft_lstnew();
 	printf("\t\t => last node acessed\n");
+	printf("\t\t ∑∑ byte_readi FROM LAST NODE\033[1;33m %i \033[0m ∑∑ \n", last->bytes_read);
 	if (last->remain != NULL || last->bytes_read == -2)
 	{
 		if (last->bytes_read == 0 && last->content != NULL)
@@ -176,14 +179,12 @@ char	*get_next_line(int fd)
 	static char			*next_line;
 
 	head = create_node(); 
+	if (head == NULL)
+		return (NULL);
 	last_node = ft_lstlast(head);
+	printf("\t\t ∑∑ CHEKING BYTES CONDITION \033[1;33m %i \033[0m ∑∑ \n", last_node->bytes_read);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
-	if (last_node->bytes_read == 0)
-	{
-		printf("got here\n");
-		return (NULL);
-	}
 	next_line = read_file(&head, fd);
 	printf("\033[1;33m LEAVING READ_FILE \033[0m\n");
 	last_node = ft_lstlast(head);
