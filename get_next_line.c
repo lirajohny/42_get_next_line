@@ -3,7 +3,7 @@
 #include "get_next_line.h"
 //#include <libc.h>
 
-char	*remain(char *buffer, int pos)
+static char	*remain(char *buffer, int pos)
 {
 	int i;
 	char *remain;
@@ -28,7 +28,7 @@ char	*remain(char *buffer, int pos)
 	return (remain);
 }
 
-char *read_line(char *str, int pos)
+static char *read_line(char *str, int pos)
 {
 	char buffer[pos + 1];
 	int	i;
@@ -46,7 +46,7 @@ char *read_line(char *str, int pos)
 	return (ft_strdup(buffer));
 }
 
-int	find_line(char *str)
+static int	find_line(char *str)
 {
 	int	index;
 	
@@ -63,15 +63,7 @@ int	find_line(char *str)
 	return (-1);
 }
 
-char	*get_line(t_list *list)
-{
-	t_list	*ptr;
-	ptr = ft_lstlast(list);
-	
-	return (ptr->content);
-}
-
-t_list *create_node(void)
+static t_list *create_node(void)
 {
 	static t_list	*list;
 	t_list *new;
@@ -82,16 +74,13 @@ t_list *create_node(void)
 		list = malloc(sizeof(t_list));
 		list->content = ft_strdup("");
 		list->bytes_read = -1;
-		return list;
+		return (list);
 	}
 	last = ft_lstlast(list);
 	if (last->bytes_read == 0)
-	{
-		clear_list(list);
-		return (NULL);
-	}
+		return (clear_list(list));
 	new = ft_lstnew();
-	if (last->remain != NULL || last->bytes_read == -2)
+	if (last->remain != NULL)
 	{
 		if (last->bytes_read == 0 && last->content != NULL)
 		{
@@ -107,7 +96,7 @@ t_list *create_node(void)
 	return (list);
 }
 
-char *read_file(t_list **list, int fd)
+static char *read_file(t_list **list, int fd)
 {
 	t_list	*new;
 	char *buffer;

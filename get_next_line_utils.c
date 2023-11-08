@@ -28,10 +28,10 @@ t_list	*ft_lstnew(void)
 	return (new_node);
 }
 
-void    clear_list(t_list *list)
+t_list    *clear_list(t_list *list)
 {		
 	if (!list)
-		return ;
+		return NULL;
 	while (list)
 	{
 		if (list->content != NULL)
@@ -45,6 +45,7 @@ void    clear_list(t_list *list)
 		//free(list);
 		list = list->next;
 	}
+	return (NULL);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
