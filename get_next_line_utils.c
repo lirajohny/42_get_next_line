@@ -26,7 +26,7 @@ t_list	*ft_lstnew(void)
 	if (!new_node)
 		return (NULL);
 	new_node->content = NULL;
-	new_node->bytes_read = 0;
+	new_node->bytes_read = -1;
 	new_node->remain = NULL;
 	new_node->next = NULL;
 	return (new_node);
