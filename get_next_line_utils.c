@@ -1,5 +1,9 @@
 #include "get_next_line.h"
 
+
+// TIRA ESSA PORRA
+#include <stdio.h>
+
 t_list	*ft_lstlast(t_list *lst)
 {
 	t_list	*tmp;
@@ -14,26 +18,41 @@ t_list	*ft_lstlast(t_list *lst)
 	return (tmp);
 }
 
-t_list	*ft_lstnew(void *content)
+t_list	*ft_lstnew(void)
 {
 	t_list	*new_node;
 
 	new_node = (t_list *)malloc(sizeof(t_list));
 	if (!new_node)
 		return (NULL);
-	new_node->content = content;
+	new_node->content = NULL;
 	new_node->bytes_read = 0;
 	new_node->remain = NULL;
 	new_node->next = NULL;
 	return (new_node);
 }
-void	clear_list(t_list *list)
+
+#include <stdio.h>
+void    clear_list(t_list *list)
 {
 	if (!list)
 		return ;
 	while (list)
 	{
-		free(list->content);
+		printf("checking content: \033[1;96m %s\033[0m \n", list->content);
+		printf("checking remain: \033[1;96m %s \033[0m \n",  list->remain);
+		if (list->content != NULL)
+		{
+			printf("freed content\n");
+			free(list->content);
+		}
+		if (list->remain != NULL)
+		{
+			printf("freed remain\n");
+			free(list->remain);
+		}
+		printf("----------------\n");
+		//free(list);
 		list = list->next;
 	}
 }
