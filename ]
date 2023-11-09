@@ -62,43 +62,40 @@ static int	find_line(char *str)
 	}
 	return (-1);
 }
-#include <stdio.h>
 
-
-char	*check_last(t_list *last)
+void	check_last(struct s_list *list)
 {
+	t_list *last;
 	t_list *new;
-	int	len;
+	t_list *head;
 	char *buffer;
 	int i;
-	char *word;
 
+	last = ft_lstlast(list);
+	head = last;
 	i = 0;
-	len = ft_strlen(last->remain);
-	word = last->remain;
-	if ((find_line(word) < 0))
-		return (NULL);
-	buffer = malloc(sizeof(char) * (len - i) + 1);
-	i = 0;
-	while (*word != '\n')
+	while (head->remain[i] != '\0')
 	{
-		buffer[i] = *word;
-		word++;
+		buffer = malloc(sizeof(char) * ft_strlen(head->remain) + 1);
+		while (head->remain[i] != '\n')
+		{
+			buffer[i] = head->remain[i];
+			i++;
+
+		}
+		buffer[i] = head->remain[i];
 		i++;
+		buffer[i] = '\0';
+		printf("buffer now is: %s\n",buffer);
+		printf("head remain still has: %s\n",buffer);
+		new = ft_lstnew();
+		new->content = ft_strdup(buffer);
+		last->next = new;
+		last = ft_lstlast(list);
 	}
-	buffer[i] = *word;
-	word++;
-	i++;
-	buffer[i] = '\0';
-	new = ft_lstnew();
-	new->content = ft_strdup(buffer);
-	new->remain = ft_strdup(word);
-	last->next = new;
-	free(buffer);
-	return (new->content);
 }
 
-static t_list *create_node(int i)
+static t_list *create_node(void)
 {
 	static t_list	*list = NULL;
 	t_list *new;
@@ -111,15 +108,14 @@ static t_list *create_node(int i)
 		list->bytes_read = -1;
 		return (list);
 	}
+	check_last(list);
 	last = ft_lstlast(list);
 	if (last->bytes_read == 0)
 		return (clear_list(&list));
-	if (last->remain != NULL && i != 1)
-		return (list);
 	new = ft_lstnew();
 	if (last->remain != NULL)
 		new->content = ft_strdup(last->remain);
-	else
+	if (new->content == NULL)
 		new->content = "";
 	last->next = new;
 	return (list);
@@ -157,18 +153,11 @@ char	*get_next_line(int fd)
 	t_list	*head = NULL;
 	static char			*next_line;
 
-	head = create_node(0); 
+	head = create_node(); 
 	if (head == NULL)
 		return (NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
-	t_list *last = ft_lstlast(head);
-	if (last->remain != NULL)
-	{
-		if ((next_line = check_last(last)) != NULL)
-			return (next_line);
-		head = create_node(1);
-	}
 	next_line = read_file(&head, fd);
 	return (next_line);
 }

@@ -24,17 +24,13 @@ int	main(void)
 	}
 	size_t len;
 //	write(fd_out, "teste\n", 6);
-	int k = 0;
 	printf("MAIN\n");
 	while((str = get_next_line(fd)) != NULL)
 	{
-		if (k == 11)
-			break;
 		printf("\n- END - (main.c) escrito:\n%s", str);
 		printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
 		write(fd_out, str, len);
-		k++;
 	}
 	printf("\033[1;32m MAIN GOT: \033[0m |\033[1;34m %s \033[0m| ... LEAVING ... \n", str);
 	free(str);
