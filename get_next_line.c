@@ -1,14 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
+/*   Updated: 2023/11/09 13:19:21 by jlira            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h> 
 #include <unistd.h> 
 #include "get_next_line.h"
-//#include <libc.h>
 
 static char	*remain(char *buffer, int pos)
 {
-	int i;
-	char *remain;
-	int	len;
-	
+	int		i;
+	char	*remain;
+	int		len;
+
 	if (!buffer)
 		return (NULL);
 	len = ft_strlen(buffer + pos);
@@ -19,7 +30,7 @@ static char	*remain(char *buffer, int pos)
 		free(remain);
 		return (NULL);
 	}
-	while(buffer[pos + i] != '\0')
+	while (buffer[pos + i] != '\0')
 	{
 		remain[i] = buffer[pos + i];
 		i++;
@@ -28,50 +39,30 @@ static char	*remain(char *buffer, int pos)
 	return (remain);
 }
 
-static char *read_line(char *str, int pos)
-{
-	char buffer[pos + 1];
-	int	i;
-
-	i = 0;
-	if (!str || pos < 0)
-		return (NULL);
-	while (str[i] != '\n')
-	{
-		buffer[i] = str[i];
-		i++;
-	}
-	buffer[i++] = '\n';
-	buffer[i] = '\0';
-	return (ft_strdup(buffer));
-}
-
 static int	find_line(char *str)
 {
 	int	index;
-	
+
 	index = 0;
 	while (str[index] != '\0')
 	{
 		if (str[index] == '\n')
 		{
 			return (index);
-			break;
+			break ;
 		}
 		index++;
 	}
 	return (-1);
 }
 #include <stdio.h>
-
-
 char	*check_last(t_list *last)
 {
-	t_list *new;
-	int	len;
-	char *buffer;
-	int i;
-	char *word;
+	t_list	*new;
+	int		len;
+	char	*buffer;
+	int		i;
+	char	*word;
 
 	i = 0;
 	len = ft_strlen(last->remain);
@@ -81,14 +72,8 @@ char	*check_last(t_list *last)
 	buffer = malloc(sizeof(char) * (len - i) + 1);
 	i = 0;
 	while (*word != '\n')
-	{
-		buffer[i] = *word;
-		word++;
-		i++;
-	}
-	buffer[i] = *word;
-	word++;
-	i++;
+		buffer[i++] = *(word++);
+	buffer[i++] = *(word++);
 	buffer[i] = '\0';
 	new = ft_lstnew();
 	new->content = ft_strdup(buffer);
@@ -98,11 +83,11 @@ char	*check_last(t_list *last)
 	return (new->content);
 }
 
-static t_list *create_node(int i)
+static t_list	*create_node(int i)
 {
 	static t_list	*list = NULL;
-	t_list *new;
-	t_list *last;
+	t_list			*new;
+	t_list			*last;
 
 	if (list == NULL)
 	{
@@ -125,11 +110,12 @@ static t_list *create_node(int i)
 	return (list);
 }
 
-static char *read_file(t_list **list, int fd)
+static char	*read_file(t_list **list, int fd)
 {
 	t_list	*new;
-	char *buffer;
-	int	pos;
+	char	*buffer;
+	int		pos;
+
 	pos = 0;
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
@@ -141,10 +127,10 @@ static char *read_file(t_list **list, int fd)
 		pos = find_line(buffer);
 		if (pos >= 0)
 		{
-			new->content = ft_strjoin(new->content, read_line(buffer, pos + 1));
-			break;
+			new->content = ft_strjoin(new->content, ft_substr(buffer, 0, pos + 1));
+			break ;
 		}
-		new->content = ft_strjoin(new->content, buffer);
+		new->content = ft_strjoin(new->content, ft_strdup(buffer));
 	}
 	if (pos != -1 && pos + 1 < new->bytes_read)
 		new->remain = remain(buffer, pos + 1);
@@ -154,15 +140,16 @@ static char *read_file(t_list **list, int fd)
 
 char	*get_next_line(int fd)
 {
-	t_list	*head = NULL;
+	t_list				*head;
 	static char			*next_line;
+	t_list				*last;
 
-	head = create_node(0); 
+	head = create_node(0);
+	last = ft_lstlast(head);
 	if (head == NULL)
 		return (NULL);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
-	t_list *last = ft_lstlast(head);
 	if (last->remain != NULL)
 	{
 		if ((next_line = check_last(last)) != NULL)
