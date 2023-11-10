@@ -12,9 +12,13 @@
 
 #include <stdlib.h> 
 #include <unistd.h> 
-#include "get_next_line.h"
-//#include <stdio.h>
+#include <stdio.h> 
 
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strjoin(char const *s1, char const *s2);
+char *get_next_line(int fd);
+size_t	ft_strlen(const char *s);
+char	*ft_strdup(const char *s1);
 
 static char	*check_remain(char *buffer, int pos)
 {
@@ -192,4 +196,123 @@ char	*get_next_line(int fd)
 	//printf("\t\t ∑∑  leaving byte_read\033[1;33m %i \033[0m ∑∑ \n", bytes_read);
 	call++;
 	return (next_line);
+}
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	char	*joined;
+	size_t	i;
+	size_t	j;
+	size_t	len;
+
+	if (!s1 || !s2)
+		return (NULL);
+	i = 0;
+	j = 0;
+	len = ft_strlen(s1) + ft_strlen(s2);
+	joined = malloc(sizeof(char) * len + 1);
+	if (!joined)
+		return (NULL);
+	while (i < len)
+	{
+		if (i < ft_strlen(s1))
+			joined[i] = s1[i];
+		else
+		{
+			joined[i] = s2[j++];
+		}
+		i++;
+	}
+	joined[i] = '\0';
+	return (joined);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	i;
+	char	*str;
+	size_t	size;
+
+	if (!s)
+		return (NULL);
+	size = ft_strlen(s);
+	if (len > size)
+		return (ft_strdup(""));
+	str = malloc(sizeof(char) * (len + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (i < len && s[start + i] != '\0')
+	{
+		str[i] = s[start + i];
+		i++;
+	}
+	str[i] = '\0';
+	return (str);
+}
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
+
+char	*ft_strdup(const char *s1)
+{
+	char	*new_string;
+	int		i;
+
+	i = 0;
+	new_string = (char *)malloc(ft_strlen(s1) + 1);
+	if (!new_string) 
+		return (NULL);
+	while (s1[i] != '\0')
+	{
+		new_string[i] = s1[i];
+		i++;
+	}
+	new_string[i] = '\0';
+	return (new_string);
+}
+#include <fcntl.h>
+
+int	main(void)
+{
+	int fd;
+	int fd_out;
+	char *str;
+
+	fd = open("input2.txt", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
+	if (fd == -1)
+	{
+		printf("erro while opening input file\n");
+		close(fd);
+		return (-1);
+	}
+	fd_out = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR); 
+	if (fd_out == -1)
+	{
+		printf("erro while opening output file\n");
+		close(fd_out);
+		return (-1);
+	}
+	size_t len;
+//	write(fd_out, "teste\n", 6);
+	printf("MAIN\n");
+	while((str = get_next_line(fd)) != NULL)
+	{
+		printf("\n- END - (main.c) escrito:\n%s", str);
+		printf("------------------------------------------------------\n");
+		len = ft_strlen(str);
+		write(fd_out, str, len);
+	}
+	printf("\033[1;32m MAIN GOT: \033[0m |\033[1;34m %s \033[0m| ... LEAVING ... \n", str);
+	free(str);
+	close(fd);
+	close(fd_out);
+    return (0);
 }
