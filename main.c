@@ -25,8 +25,14 @@ int	main(void)
 	size_t len;
 //	write(fd_out, "teste\n", 6);
 	printf("MAIN\n");
+	int k = 0;
 	while((str = get_next_line(fd)) != NULL)
 	{
+		if (k == 19)
+		{
+			break ;
+		}
+		k++;
 		printf("\n- END - (main.c) escrito:\n%s", str);
 		printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
