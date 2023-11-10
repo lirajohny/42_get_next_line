@@ -1,51 +1,5 @@
 #include "get_next_line.h"
 
-t_list	*ft_lstlast(t_list *lst)
-{
-	t_list	*tmp;
-
-	if (!lst)
-		return (NULL);
-	tmp = lst;
-	while (tmp->next != NULL)
-	{
-		tmp = tmp->next;
-	}
-	return (tmp);
-}
-
-t_list	*ft_lstnew(void)
-{
-	t_list	*new_node;
-
-	new_node = (t_list *)malloc(sizeof(t_list));
-	if (!new_node)
-		return (NULL);
-	new_node->content = NULL;
-	new_node->bytes_read = -1;
-	new_node->remain = NULL;
-	new_node->next = NULL;
-	return (new_node);
-}
-#include <stdio.h>
-t_list    *clear_list(t_list **head)
-{		
-	t_list	*curr;
-
-	curr = *head;
-	while (curr != NULL)
-	{
-		t_list *aux = curr;
-		curr = curr->next;
-		free(aux->remain);
-		aux->remain = NULL;
-		free(aux->content);
-		aux->content = NULL;
-		free(aux);
-	}
-	return (NULL);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined;
