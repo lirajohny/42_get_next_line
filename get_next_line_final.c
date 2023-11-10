@@ -1,6 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
+/*   get_next_line_final.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
+/*   Updated: 2023/11/10 12:09:37 by jlira            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
@@ -13,12 +26,13 @@
 #include <stdlib.h> 
 #include <unistd.h> 
 #include <stdio.h> 
+#define BUFFER_SIZE 10
 
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char *s, unsigned int start, size_t len);
+char	*ft_strjoin(char *s1, char *s2);
 char *get_next_line(int fd);
-size_t	ft_strlen(const char *s);
-char	*ft_strdup(const char *s1);
+size_t	ft_strlen(char *s);
+char	*ft_strdup(char *s1);
 
 static char	*check_remain(char *buffer, int pos)
 {
@@ -89,8 +103,12 @@ static char	*read_remain(char **remain, int *bytes_read, int call)
 	if (pos >= 0)
 	{
 		//printf("\t\t => \033[1;91m remain \33[0m from last call: |\033[1;34m %s \033[0m|\n", *remain);
-		buff_remain = malloc(sizeof(char) * pos + 1);
-		buff_remain = ft_substr(*remain, 0, pos + 1);
+        buff_remain = ft_substr(*remain, 0, pos + 1);
+        if (!buff_remain) 
+        {
+            free(buff_remain);
+            return (NULL);
+        } 
 		*remain = ft_substr(*remain, pos + 1, ft_strlen(*remain));
 		//printf("\t\t => update remain to |\033[1;34m %s \033[0m|\n", *remain);
 		//printf("\t\t => RETURNING (BUFF_REMAIN) |\033[1;34m %s \033[0m|\n", buff_remain);
@@ -105,6 +123,7 @@ static char	*read_file(int fd, char **remain, int *i)
 	char	*buffer;
 	int		bytes_read;
 	char	*content;
+    char    *temp;
 	int		pos;
 	int loops = 1;
 
@@ -113,7 +132,7 @@ static char	*read_file(int fd, char **remain, int *i)
 	bytes_read = 0;
     if (!*remain)
     {
-        *remain = "";
+        *remain = ft_strdup("");
         if (!*remain)
         {
             // Handle memory allocation failure
@@ -140,12 +159,12 @@ static char	*read_file(int fd, char **remain, int *i)
 		{
 			//printf("\t\t \033[1;32m√\033[0m found a new line at position | \033[1;33m %i \033[0m |\n", pos);
 			//printf("\t\t => new->content (old) |\033[1;34m %s \033[0m|\n", content);
-			content = ft_strjoin(content, ft_substr(buffer, 0, pos + 1));
-			//free(*remain);
-			*remain = "";
+            temp = ft_substr(buffer, 0, pos + 1);
+			content = ft_strjoin(content, temp);
 			//printf("\t\t => new->content (new) |\033[1;34m %s \033[0m|\n", content);
 			*i = bytes_read;
 			//printf("\t\t ∑∑  UPDATED byte_read\033[1;33m %i \033[0m ∑∑ \n", *i);
+            free(temp);
 			break ;
 		}
 		//printf("\t\t => \033[1;31m X NO\033[0m new line\n");
@@ -153,7 +172,7 @@ static char	*read_file(int fd, char **remain, int *i)
 		content = ft_strjoin(content, buffer);
 		//printf("\t\t => new->content (new) |\033[1;34m %s \033[0m|\n", content);
 	}
-	if (pos != -1 && pos + 1 < bytes_read)
+    if (pos != -1 && pos + 1 < bytes_read)
 		*remain = check_remain(buffer, pos + 1);
 	free(buffer);
 	//printf("\t\t => new->remain \033[1;92m saved \33[0m |\033[1;34m %s \033[0m|\n", *remain);
@@ -197,36 +216,36 @@ char	*get_next_line(int fd)
 	call++;
 	return (next_line);
 }
-char	*ft_strjoin(char const *s1, char const *s2)
+
+char	*ft_strjoin(char *s1, char *s2)
 {
-	char	*joined;
-	size_t	i;
-	size_t	j;
-	size_t	len;
+	size_t	count1;
+	size_t	count2;
+	char	*s3;
 
 	if (!s1 || !s2)
 		return (NULL);
-	i = 0;
-	j = 0;
-	len = ft_strlen(s1) + ft_strlen(s2);
-	joined = malloc(sizeof(char) * len + 1);
-	if (!joined)
+	count1 = 0;
+	count2 = 0;
+	s3 = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!s3)
 		return (NULL);
-	while (i < len)
+	while (count1 != ft_strlen(s1))
 	{
-		if (i < ft_strlen(s1))
-			joined[i] = s1[i];
-		else
-		{
-			joined[i] = s2[j++];
-		}
-		i++;
+		s3[count1] = s1[count1];
+		count1++;
 	}
-	joined[i] = '\0';
-	return (joined);
+	while (count2 != ft_strlen(s2))
+	{
+		s3[count1 + count2] = s2[count2];
+		count2++;
+	}
+	s3[count1 + count2] = '\0';
+    free(s1);
+	return (s3);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	size_t	i;
 	char	*str;
@@ -249,7 +268,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	str[i] = '\0';
 	return (str);
 }
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(char *s)
 {
 	size_t	i;
 
@@ -261,7 +280,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(char *s1)
 {
 	char	*new_string;
 	int		i;
@@ -305,13 +324,13 @@ int	main(void)
 	printf("MAIN\n");
 	while((str = get_next_line(fd)) != NULL)
 	{
-		printf("\n- END - (main.c) escrito:\n%s", str);
-		printf("------------------------------------------------------\n");
+		//printf("\n- END - (main.c) escrito:\n%s", str);
+		//printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
 		write(fd_out, str, len);
 	}
-	printf("\033[1;32m MAIN GOT: \033[0m |\033[1;34m %s \033[0m| ... LEAVING ... \n", str);
-	free(str);
+	//printf("\033[1;32m MAIN GOT: \033[0m |\033[1;34m %s \033[0m| ... LEAVING ... \n", str);
+	//free(str);
 	close(fd);
 	close(fd_out);
     return (0);
