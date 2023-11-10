@@ -6,7 +6,7 @@
 /*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/10 10:07:48 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/10 14:38:19 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <unistd.h> 
 #include "get_next_line.h"
 //#include <stdio.h>
+
 
 
 static char	*check_remain(char *buffer, int pos)
@@ -85,8 +86,12 @@ static char	*read_remain(char **remain, int *bytes_read, int call)
 	if (pos >= 0)
 	{
 		//printf("\t\t => \033[1;91m remain \33[0m from last call: |\033[1;34m %s \033[0m|\n", *remain);
-		buff_remain = malloc(sizeof(char) * pos + 1);
-		buff_remain = ft_substr(*remain, 0, pos + 1);
+        buff_remain = ft_substr(*remain, 0, pos + 1);
+        if (!buff_remain) 
+        {
+            free(buff_remain);
+            return (NULL);
+        } 
 		*remain = ft_substr(*remain, pos + 1, ft_strlen(*remain));
 		//printf("\t\t => update remain to |\033[1;34m %s \033[0m|\n", *remain);
 		//printf("\t\t => RETURNING (BUFF_REMAIN) |\033[1;34m %s \033[0m|\n", buff_remain);
@@ -101,6 +106,7 @@ static char	*read_file(int fd, char **remain, int *i)
 	char	*buffer;
 	int		bytes_read;
 	char	*content;
+    char    *temp;
 	int		pos;
 	int loops = 1;
 
@@ -109,7 +115,7 @@ static char	*read_file(int fd, char **remain, int *i)
 	bytes_read = 0;
     if (!*remain)
     {
-        *remain = "";
+        *remain = ft_strdup("");
         if (!*remain)
         {
             // Handle memory allocation failure
@@ -136,12 +142,12 @@ static char	*read_file(int fd, char **remain, int *i)
 		{
 			//printf("\t\t \033[1;32m√\033[0m found a new line at position | \033[1;33m %i \033[0m |\n", pos);
 			//printf("\t\t => new->content (old) |\033[1;34m %s \033[0m|\n", content);
-			content = ft_strjoin(content, ft_substr(buffer, 0, pos + 1));
-			//free(*remain);
-			*remain = "";
+            temp = ft_substr(buffer, 0, pos + 1);
+			content = ft_strjoin(content, temp);
 			//printf("\t\t => new->content (new) |\033[1;34m %s \033[0m|\n", content);
 			*i = bytes_read;
 			//printf("\t\t ∑∑  UPDATED byte_read\033[1;33m %i \033[0m ∑∑ \n", *i);
+            free(temp);
 			break ;
 		}
 		//printf("\t\t => \033[1;31m X NO\033[0m new line\n");
@@ -149,7 +155,7 @@ static char	*read_file(int fd, char **remain, int *i)
 		content = ft_strjoin(content, buffer);
 		//printf("\t\t => new->content (new) |\033[1;34m %s \033[0m|\n", content);
 	}
-	if (pos != -1 && pos + 1 < bytes_read)
+    if (pos != -1 && pos + 1 < bytes_read)
 		*remain = check_remain(buffer, pos + 1);
 	free(buffer);
 	//printf("\t\t => new->remain \033[1;92m saved \33[0m |\033[1;34m %s \033[0m|\n", *remain);

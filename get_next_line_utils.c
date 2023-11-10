@@ -1,6 +1,35 @@
 #include "get_next_line.h"
 
 
+char	*ft_strjoin(char *s1, char *s2)
+{
+	size_t	count1;
+	size_t	count2;
+	char	*s3;
+
+	if (!s1 || !s2)
+		return (NULL);
+	count1 = 0;
+	count2 = 0;
+	s3 = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!s3)
+		return (NULL);
+	while (count1 != ft_strlen(s1))
+	{
+		s3[count1] = s1[count1];
+		count1++;
+	}
+	while (count2 != ft_strlen(s2))
+	{
+		s3[count1 + count2] = s2[count2];
+		count2++;
+	}
+	s3[count1 + count2] = '\0';
+    free(s1);
+	//free(s2);
+	return (s3);
+}
+
 void	*ft_memset(void *s, int c, size_t n)
 {
 	size_t	i;
@@ -56,34 +85,6 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	destiny[i] = '\0';
 	return (destiny);
 }
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	size_t	count1;
-	size_t	count2;
-	char	*s3;
-
-	if (!s1 || !s2)
-		return (NULL);
-	count1 = 0;
-	count2 = 0;
-	s3 = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!s3)
-		return (NULL);
-	while (count1 != ft_strlen(s1))
-	{
-		s3[count1] = s1[count1];
-		count1++;
-	}
-	while (count2 != ft_strlen(s2))
-	{
-		s3[count1 + count2] = s2[count2];
-		count2++;
-	}
-	s3[count1 + count2] = '\0';
-	return (s3);
-}
-
 size_t	ft_strlen(char *s)
 {
 	size_t	i;
@@ -113,3 +114,4 @@ char	*ft_strdup(char *s1)
 	new_string[i] = '\0';
 	return (new_string);
 }
+

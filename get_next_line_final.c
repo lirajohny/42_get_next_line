@@ -1,28 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_final.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/10 12:09:37 by jlira            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/10 10:07:48 by jlira            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include <stdlib.h> 
 #include <unistd.h> 
 #include <stdio.h> 
@@ -242,31 +217,64 @@ char	*ft_strjoin(char *s1, char *s2)
 	}
 	s3[count1 + count2] = '\0';
     free(s1);
+	//free(s2);
 	return (s3);
+}
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t	i;
+	char	*char_s;
+
+	char_s = (char *)s;
+	i = 0;
+	while (i < n)
+	{
+		char_s[i] = c;
+		i++;
+	}
+	return ((void *)char_s);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	size_t	total_size;
+	void	*ptr;
+	int		c;
+
+	c = 0;
+	total_size = nmemb * size;
+	ptr = malloc(total_size);
+	if (ptr != NULL)
+		ft_memset(ptr, c, total_size);
+	return (ptr);
 }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	size_t	i;
-	char	*str;
-	size_t	size;
+	size_t	len_src;
+	char	*destiny;
 
 	if (!s)
 		return (NULL);
-	size = ft_strlen(s);
-	if (len > size)
-		return (ft_strdup(""));
-	str = malloc(sizeof(char) * (len + 1));
-	if (!str)
-		return (NULL);
 	i = 0;
-	while (i < len && s[start + i] != '\0')
+	len_src = ft_strlen(s);
+	if (start > len_src)
+		return (ft_strdup(""));
+	else if (start + len > len_src)
+		len = len_src - start;
+	destiny = ft_calloc(len + 1, sizeof(char));
+	if ((!destiny))
+		return (NULL);
+	while (s[start] && i < len)
 	{
-		str[i] = s[start + i];
+		destiny[i] = s[start];
 		i++;
+		start++;
 	}
-	str[i] = '\0';
-	return (str);
+	destiny[i] = '\0';
+	return (destiny);
 }
 size_t	ft_strlen(char *s)
 {
@@ -328,9 +336,11 @@ int	main(void)
 		//printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
 		write(fd_out, str, len);
+		free(str);
 	}
 	//printf("\033[1;32m MAIN GOT: \033[0m |\033[1;34m %s \033[0m| ... LEAVING ... \n", str);
 	//free(str);
+	free(str);
 	close(fd);
 	close(fd_out);
     return (0);

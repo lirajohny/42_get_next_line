@@ -27,12 +27,16 @@ int	main(void)
 	printf("MAIN\n");
 	while((str = get_next_line(fd)) != NULL)
 	{
-		printf("\n- END - (main.c) escrito:\n%s", str);
-		printf("------------------------------------------------------\n");
+		//printf("\n- END - (main.c) escrito:\n%s", str);
+		//printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
 		write(fd_out, str, len);
+		free(str);
 	}
-	printf("\033[1;32m MAIN GOT: \033[0m |\033[1;34m %s \033[0m| ... LEAVING ... \n", str);
+	//printf("\033[1;32m MAIN GOT: \033[0m |\033[1;34m %s \033[0m| ... LEAVING ... \n", str);
+	//free(str);
+	free(str);
 	close(fd);
 	close(fd_out);
+    return (0);
 }
