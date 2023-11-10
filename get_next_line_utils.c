@@ -1,58 +1,90 @@
 #include "get_next_line.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*joined;
-	size_t	i;
-	size_t	j;
-	size_t	len;
 
-	if (!s1 || !s2)
-		return (NULL);
+void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t	i;
+	char	*char_s;
+
+	char_s = (char *)s;
 	i = 0;
-	j = 0;
-	len = ft_strlen(s1) + ft_strlen(s2);
-	joined = malloc(sizeof(char) * len + 1);
-	if (!joined)
-		return (NULL);
-	while (i < len)
+	while (i < n)
 	{
-		if (i < ft_strlen(s1))
-			joined[i] = s1[i];
-		else
-		{
-			joined[i] = s2[j++];
-		}
+		char_s[i] = c;
 		i++;
 	}
-	joined[i] = '\0';
-	return (joined);
+	return ((void *)char_s);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	size_t	total_size;
+	void	*ptr;
+	int		c;
+
+	c = 0;
+	total_size = nmemb * size;
+	ptr = malloc(total_size);
+	if (ptr != NULL)
+		ft_memset(ptr, c, total_size);
+	return (ptr);
+}
+
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	size_t	i;
-	char	*str;
-	size_t	size;
+	size_t	len_src;
+	char	*destiny;
 
 	if (!s)
 		return (NULL);
-	size = ft_strlen(s);
-	if (len > size)
-		return (ft_strdup(""));
-	str = malloc(sizeof(char) * (len + 1));
-	if (!str)
-		return (NULL);
 	i = 0;
-	while (i < len && s[start + i] != '\0')
+	len_src = ft_strlen(s);
+	if (start > len_src)
+		return (ft_strdup(""));
+	else if (start + len > len_src)
+		len = len_src - start;
+	destiny = ft_calloc(len + 1, sizeof(char));
+	if ((!destiny))
+		return (NULL);
+	while (s[start] && i < len)
 	{
-		str[i] = s[start + i];
+		destiny[i] = s[start];
 		i++;
+		start++;
 	}
-	str[i] = '\0';
-	return (str);
+	destiny[i] = '\0';
+	return (destiny);
 }
-size_t	ft_strlen(const char *s)
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	size_t	count1;
+	size_t	count2;
+	char	*s3;
+
+	if (!s1 || !s2)
+		return (NULL);
+	count1 = 0;
+	count2 = 0;
+	s3 = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!s3)
+		return (NULL);
+	while (count1 != ft_strlen(s1))
+	{
+		s3[count1] = s1[count1];
+		count1++;
+	}
+	while (count2 != ft_strlen(s2))
+	{
+		s3[count1 + count2] = s2[count2];
+		count2++;
+	}
+	s3[count1 + count2] = '\0';
+	return (s3);
+}
+
+size_t	ft_strlen(char *s)
 {
 	size_t	i;
 
@@ -64,7 +96,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strdup(const char *s1)
+char	*ft_strdup(char *s1)
 {
 	char	*new_string;
 	int		i;
