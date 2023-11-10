@@ -5,10 +5,10 @@
 #include <unistd.h>
 typedef struct s_list
 {
-	char *content;
+	char *buf;
 	char *remain;
 	int	bytes_read;
-	struct s_list *next;
+	int	call;
 }	t_list;
 #ifndef BUFFER_SIZE
 # define BUFFER_SIZE 10
