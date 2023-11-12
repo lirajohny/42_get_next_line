@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/12 16:43:55 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/12 16:48:08 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/12 17:14:33 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE 2
 # endif
 # include <stdlib.h>
 # include <unistd.h>

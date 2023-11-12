@@ -6,7 +6,7 @@
 /*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/12 17:04:34 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/12 17:29:34 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	find_line(char *str)
 	return (-1);
 }
 
-static char	*read_remain(t_list *node)
+static char	*read_remain(t_list *node, int saved)
 {
 	char	*buff_remain;
 	int		pos;
@@ -48,14 +48,13 @@ static char	*read_remain(t_list *node)
 	pos = find_line(node->remain);
 	if (pos >= 0)
 	{
-		buff_remain = ft_substr(node->remain, 0, pos + 1);
+		buff_remain = ft_substr(node->remain, saved, pos + 1);
 		if (!buff_remain)
 		{
 			free(buff_remain);
 			return (NULL);
 		}
-		remain = ft_substr(remain, pos + 1, ft_strlen(remain));
-		node->remain = remain;
+		node->remain = remain + (pos + 1);
 		return (buff_remain);
 	}
 	return (NULL);
@@ -85,6 +84,7 @@ char	*fetch_line(t_list	*node, int fd, int pos)
 	}
 	if (pos != -1 && pos + 1 < node->bytes_read)
 		node->remain = ft_substr(buff, pos +1, node->bytes_read);
+	free(buff);
 	return (node->line);
 }
 
@@ -103,6 +103,7 @@ char	*get_next_line(int fd)
 {
 	char				*next_line;
 	static t_list		*node;
+	static	int			saved;
 	char				*remain;
 
 	if (node == NULL)
@@ -110,12 +111,13 @@ char	*get_next_line(int fd)
 		node = malloc(sizeof(t_list));
 		node->call = 1;
 		node->line = NULL;
-		node->remain = "";
+		node->remain = ft_strdup("");
 		node->bytes_read = 2;
+		saved = 0;
 	}
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
-	remain = read_remain(node);
+	remain = read_remain(node, saved);
 	if (remain != NULL)
 		return (remain);
 	else
