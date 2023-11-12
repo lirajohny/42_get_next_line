@@ -6,7 +6,7 @@
 /*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/12 16:16:04 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/12 16:36:06 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,11 @@ static char	*read_remain(t_list *node)
 	return (NULL);
 }
 
-char	*fetch_line(t_list	*node, int fd)
+char	*fetch_line(t_list	*node, int fd, int i, int pos)
 {
-	int		pos;
-	//char	*buff;
 	char	*temp;
+	char	buff[BUFFER_SIZE + 1];
 
-	pos = 0;
-	//buff = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	char buff[BUFFER_SIZE + 1];
-	//if (!buff)
-	//	return (NULL);
 	while (node->bytes_read >= 1)
 	{
 		node->bytes_read = read(fd, buff, BUFFER_SIZE);
@@ -79,15 +73,11 @@ char	*fetch_line(t_list	*node, int fd)
 		pos = find_line(buff);
 		if (pos >= 0)
 		{
-			int i =0;
 			temp = malloc(sizeof(char) * (pos + 2));
-			while (buff[i] != '\n')
-			{
+			while (buff[i++] != '\n')
 				temp[i] = buff[i];
-				i++;
-			}
-			temp[i] = '\n';
-			temp[i + 1] = '\0';
+			temp[i + 1] = '\n';
+			temp[i + 2] = '\0';
 			node->line = ft_strjoin(node->line, temp);
 			free(temp);
 			break ;
@@ -96,7 +86,6 @@ char	*fetch_line(t_list	*node, int fd)
 	}
 	if (pos != -1 && pos + 1 < node->bytes_read)
 		node->remain = ft_substr(buff, pos +1, node->bytes_read);
-//	free(buff);
 	return (node->line);
 }
 
@@ -106,7 +95,7 @@ static char	*read_file(int fd, t_list *node)
 
 	if (node->remain != NULL || node->line == NULL)
 		node->line = ft_strdup(node->remain);
-	next_line = fetch_line(node, fd);
+	next_line = fetch_line(node, fd, -1, 0);
 	node->call++;
 	return (next_line);
 }
@@ -121,7 +110,7 @@ char	*get_next_line(int fd)
 	{
 		node = malloc(sizeof(t_list));
 		node->call = 1;
-		node->line = NULL; 
+		node->line = NULL;
 		node->remain = "";
 		node->bytes_read = 2;
 	}
@@ -129,15 +118,11 @@ char	*get_next_line(int fd)
 		return (NULL);
 	remain = read_remain(node);
 	if (remain != NULL)
-	{
 		return (remain);
-	}
 	else
 	{
 		if (node->bytes_read == 0 && node->call != 1)
-		{
 			return (NULL);
-		}
 		next_line = read_file(fd, node);
 	}
 	node->call++;

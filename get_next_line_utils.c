@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/12 16:38:54 by jlira             #+#    #+#             */
+/*   Updated: 2023/11/12 16:43:18 by jlira            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 char	*ft_strjoin(char *s1, char *s2)
@@ -29,51 +41,29 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (pointer);
 }
 
-void	*ft_memset(void *s, int c, size_t n)
-{
-	size_t	i;
-	char	*char_s;
-
-	char_s = (char *)s;
-	i = 0;
-	while (i < n)
-	{
-		char_s[i] = c;
-		i++;
-	}
-	return ((void *)char_s);
-}
-
 void	*ft_calloc(size_t nmemb, size_t size)
 {
 	size_t	total_size;
 	void	*ptr;
 	int		c;
+	size_t	i;
+	char	*char_s;
 
 	c = 0;
+	i = 0;
 	total_size = nmemb * size;
 	ptr = malloc(total_size);
+	char_s = (char *)ptr;
 	if (ptr != NULL)
-		ft_memset(ptr, c, total_size);
-	return (ptr);
-}
-
-size_t	ft_strlcpy(char *dst, char *src, size_t dstsize)
-{
-	size_t	size;
-	size_t	counter;
-
-	counter = 0;
-	size = ft_strlen(src);
-	if (dstsize == 0)
-		return (size);
-	while (counter < size && counter < dstsize - 1)
 	{
-		dst[counter] = src[counter];
-		counter++;
+		while (i < total_size)
+		{
+			char_s[i] = c;
+			i++;
+		}
 	}
-	dst[counter] = '\0';
-	return (size);
+	ptr = char_s;
+	return (ptr);
 }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
@@ -102,6 +92,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	destiny[i] = '\0';
 	return (destiny);
 }
+
 size_t	ft_strlen(char *s)
 {
 	size_t	i;
