@@ -21,4 +21,10 @@ char	*ft_strdup(char *s1);
 t_list	*ft_lstlast(t_list *lst);
 t_list	*ft_lstnew(void);
 t_list *clear_list(t_list **head);
+
+
+
+
+
+size_t	ft_strlcpy(char *dst, char *src, size_t dstsize);
 #endif

@@ -1,33 +1,32 @@
 #include "get_next_line.h"
 
-
 char	*ft_strjoin(char *s1, char *s2)
 {
-	size_t	count1;
-	size_t	count2;
-	char	*s3;
+	char	*pointer;
+	int		counter;
 
-	if (!s1 || !s2)
+	counter = 0;
+	pointer = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	if (!pointer)
 		return (NULL);
-	count1 = 0;
-	count2 = 0;
-	s3 = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!s3)
+	if (s1)
+	{
+		while (s1[counter])
+		{
+			pointer[counter] = s1[counter];
+			counter++;
+		}
+		free(s1);
+	}
+	while (*s2)
+		pointer[counter++] = *s2++;
+	pointer[counter] = '\0';
+	if (!*pointer)
+	{
+		free(pointer);
 		return (NULL);
-	while (count1 != ft_strlen(s1))
-	{
-		s3[count1] = s1[count1];
-		count1++;
 	}
-	while (count2 != ft_strlen(s2))
-	{
-		s3[count1 + count2] = s2[count2];
-		count2++;
-	}
-	s3[count1 + count2] = '\0';
-    free(s1);
-	//free(s2);
-	return (s3);
+	return (pointer);
 }
 
 void	*ft_memset(void *s, int c, size_t n)
@@ -57,6 +56,24 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	if (ptr != NULL)
 		ft_memset(ptr, c, total_size);
 	return (ptr);
+}
+
+size_t	ft_strlcpy(char *dst, char *src, size_t dstsize)
+{
+	size_t	size;
+	size_t	counter;
+
+	counter = 0;
+	size = ft_strlen(src);
+	if (dstsize == 0)
+		return (size);
+	while (counter < size && counter < dstsize - 1)
+	{
+		dst[counter] = src[counter];
+		counter++;
+	}
+	dst[counter] = '\0';
+	return (size);
 }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
@@ -99,19 +116,18 @@ size_t	ft_strlen(char *s)
 
 char	*ft_strdup(char *s1)
 {
-	char	*new_string;
-	int		i;
+	char	*pointer;
+	int		counter;
 
-	i = 0;
-	new_string = (char *)malloc(ft_strlen(s1) + 1);
-	if (!new_string) 
+	pointer = malloc((ft_strlen(s1) + 1) * sizeof(char));
+	if (!pointer)
 		return (NULL);
-	while (s1[i] != '\0')
+	counter = 0;
+	while (s1[counter] != '\0')
 	{
-		new_string[i] = s1[i];
-		i++;
+		pointer[counter] = s1[counter];
+		counter++;
 	}
-	new_string[i] = '\0';
-	return (new_string);
+	pointer[counter] = '\0';
+	return (pointer);
 }
-
