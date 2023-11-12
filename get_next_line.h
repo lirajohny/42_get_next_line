@@ -5,7 +5,7 @@
 #include <unistd.h>
 typedef struct s_list
 {
-	char *buf;
+	char *line;
 	char *remain;
 	int	bytes_read;
 	int	call;

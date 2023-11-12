@@ -6,7 +6,7 @@
 /*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/10 16:17:15 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/12 11:44:39 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,43 +64,54 @@ static char	*read_remain(t_list *node)
 char	*fetch_line(t_list	*node, int fd)
 {
 	int		pos;
-	char	*content;
+	char	*buff;
+	printf("\033[1;33m FETCH LINE FUNCTION \033[0m\n");
 
 	pos = 0;
-	content = ft_strdup(node->remain);
-	node->buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!node->buf)
+	printf("\t\033[1;32m  > REMAIN : \033[0m |\033[1;34m %s \033[0m|\n", node->remain);
+	if (node->remain != NULL)
+		node->line = ft_strdup(node->remain);
+	buff = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buff)
 		return (NULL);
-	while (node->bytes_read > 1)
+	while (node->bytes_read >= 1)
 	{
-		node->bytes_read = read(fd, node->buf, BUFFER_SIZE);
-		node->buf[node->bytes_read] = '\0';
-		pos = find_line(node->buf);
+		printf("\t\t ∑∑ byte_read\033[1;33m %i \033[0m ∑∑ \n", node->bytes_read);
+		node->bytes_read = read(fd, buff, BUFFER_SIZE);
+		buff[node->bytes_read] = '\0';
+		pos = find_line(buff);
 		if (pos >= 0)
 		{
-			content = ft_strjoin(content, ft_substr(node->buf, 0, pos +1));
+			node->line = ft_strjoin(node->line, ft_substr(buff, 0, pos +1));
+			printf("\t\033[1;32m  > LINE : \033[0m |\033[1;34m %s \033[0m|\n", node->line);
 			break ;
 		}
-		content = ft_strjoin(content, node->buf);
+		node->line = ft_strjoin(node->line, buff);
+		printf("\t\033[1;32m  > LINE : \033[0m |\033[1;34m %s \033[0m|\n", node->line);
 	}
 	if (pos != -1 && pos + 1 < node->bytes_read)
-		node->remain = ft_substr(node->buf, pos +1, ft_strlen(node->buf));
-	return (content);
+		node->remain = ft_substr(buff, pos +1, ft_strlen(buff));
+	free(buff);
+	return (node->line);
 }
 
 static char	*read_file(int fd, t_list *node)
 {
-	char	*content;
+	char	*next_line;
 
-	if (!node->remain)
-		node->remain = ft_strdup("");
-	content = fetch_line(node, fd);
+	if (node->remain != NULL)
+	{
+		node->line = ft_strdup(node->remain);
+		printf("\t\033[1;32m  >> juntando line: \033[0m |\033[1;34m %s \033[0m| a : \033[0m |\033[1;34m %s \033[0m|\n", node->remain, node->line);
+	}
+	next_line = fetch_line(node, fd);
 	node->call++;
-	return (content);
+	return (next_line);
 }
 
 char	*get_next_line(int fd)
 {
+	printf("\033[1;33m GET_NEXT_LINE FUNCTION \033[0m\n");
 	char				*next_line;
 	static t_list		*node;
 
@@ -108,20 +119,33 @@ char	*get_next_line(int fd)
 	{
 		node = malloc(sizeof(t_list));
 		node->call = 1;
-		node->remain = NULL;
+		node->line = ft_strdup("");
+		node->remain = ft_strdup("");
 		node->bytes_read = 2;
 	}
+	printf("\t\t ∑∑ byte_read\033[1;33m %i \033[0m ∑∑ \n", node->bytes_read);
+	printf("\t\033[1;32m  > REMAIN INICIO: \033[0m |\033[1;34m %s \033[0m|\n", node->remain);
+	printf("\t\033[1;32m  > LINE INICIO: \033[0m |\033[1;34m %s \033[0m|\n", node->line);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
 		return (NULL);
 	next_line = read_remain(node);
 	if (next_line != NULL)
+	{
+		printf("\033[1;32m  Returning: \033[0m |\033[1;34m %s \033[0m|\n", next_line);
+		printf("\033[1;32m  HAS: \033[0m |\033[1;34m %s \033[0m|\n", node->line);
+		printf("\033[1;32m  saving: \033[0m |\033[1;34m %s \033[0m|\n", node->remain);
 		return (next_line);
+	}
 	else
 	{
 		if (node->bytes_read == 0 && node->call != 1)
+		{
 			return (NULL);
+		}
 		next_line = read_file(fd, node);
+		printf("\033[1;32m  Returning: \033[0m |\033[1;34m %s \033[0m|\n", next_line);
+		printf("\033[1;32m  HAS: \033[0m |\033[1;34m %s \033[0m|\n", node->line);
+		printf("\033[1;32m  saving: \033[0m |\033[1;34m %s \033[0m|\n", node->remain);
 	}
-	free(node->buf);
 	return (next_line);
 }
