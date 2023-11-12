@@ -6,7 +6,7 @@
 /*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/12 16:36:06 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/12 17:04:34 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,14 @@ static char	*read_remain(t_list *node)
 	return (NULL);
 }
 
-char	*fetch_line(t_list	*node, int fd, int i, int pos)
+char	*fetch_line(t_list	*node, int fd, int pos)
 {
 	char	*temp;
-	char	buff[BUFFER_SIZE + 1];
+	char	*buff;
 
+	buff = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buff)
+		return (NULL);
 	while (node->bytes_read >= 1)
 	{
 		node->bytes_read = read(fd, buff, BUFFER_SIZE);
@@ -73,11 +76,7 @@ char	*fetch_line(t_list	*node, int fd, int i, int pos)
 		pos = find_line(buff);
 		if (pos >= 0)
 		{
-			temp = malloc(sizeof(char) * (pos + 2));
-			while (buff[i++] != '\n')
-				temp[i] = buff[i];
-			temp[i + 1] = '\n';
-			temp[i + 2] = '\0';
+			temp = ft_substr(buff, 0, pos + 1);
 			node->line = ft_strjoin(node->line, temp);
 			free(temp);
 			break ;
@@ -95,7 +94,7 @@ static char	*read_file(int fd, t_list *node)
 
 	if (node->remain != NULL || node->line == NULL)
 		node->line = ft_strdup(node->remain);
-	next_line = fetch_line(node, fd, -1, 0);
+	next_line = fetch_line(node, fd, 0);
 	node->call++;
 	return (next_line);
 }
