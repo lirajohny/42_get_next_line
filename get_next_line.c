@@ -6,7 +6,7 @@
 /*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/12 23:20:42 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/12 23:55:49 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,10 @@ static char	*read_remain(t_list *node)
 char	*fetch_line(t_list	*node, int fd, int pos)
 {
 	char	*buff;
+	static char *line;
 
 	buff = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	line = ft_strdup(node->line);
 	if (!buff)
 		return (NULL);
 	while (node->bytes_read >= 1)
@@ -70,15 +72,15 @@ char	*fetch_line(t_list	*node, int fd, int pos)
 		pos = find_line(buff);
 		if (pos >= 0)
 		{
-			node->line = ft_strjoin(node->line, ft_substr(buff, 0, pos + 1));
+			line = ft_strjoin(line, ft_substr(buff, 0, pos + 1));
 			break ;
 		}
-		node->line = ft_strjoin(node->line, buff);
+		line = ft_strjoin(line, buff);
 	}
 	if (pos != -1 && pos + 1 < node->bytes_read)
 		node->remain = ft_substr(buff, pos + 1, ft_strlen(buff));
 	free(buff);
-	return (node->line);
+	return (line);
 }
 
 static char	*read_file(int fd, t_list *node)
@@ -105,8 +107,8 @@ char	*get_next_line(int fd)
 	{
 		node = malloc(sizeof(t_list));
 		node->call = 1;
-		node->line = ft_strdup("");
-		node->remain = ft_strdup("");
+		node->line = "";
+		node->remain = "";
 		node->bytes_read = 2;
 	}
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
