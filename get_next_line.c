@@ -6,7 +6,7 @@
 /*   By: jlira <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/09 12:55:13 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/12 23:55:49 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/13 10:42:48 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@ static char	*read_remain(t_list *node)
 	if ((!node->remain && node->call != 1) || (bytes_read == 0 && node->call != 1))
 	{
 		free(node->remain);
+		free(node);
 		return (NULL);
 	}
 	pos = find_line(node->remain);
 	if (pos >= 0)
 	{
 		buff_remain = ft_substr(node->remain, 0, pos + 1);
+		free(node->remain);
 		node->remain = node->remain + (pos + 1);
 		return (buff_remain);
 	}
@@ -59,10 +61,9 @@ static char	*read_remain(t_list *node)
 char	*fetch_line(t_list	*node, int fd, int pos)
 {
 	char	*buff;
-	static char *line;
+	char	*temp;
 
 	buff = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	line = ft_strdup(node->line);
 	if (!buff)
 		return (NULL);
 	while (node->bytes_read >= 1)
@@ -72,15 +73,21 @@ char	*fetch_line(t_list	*node, int fd, int pos)
 		pos = find_line(buff);
 		if (pos >= 0)
 		{
-			line = ft_strjoin(line, ft_substr(buff, 0, pos + 1));
+			temp = ft_substr(buff, 0, pos + 1);
+			node->line = ft_strjoin(node->line, temp);
+			free(temp);
 			break ;
 		}
-		line = ft_strjoin(line, buff);
+		node->line = ft_strjoin(node->line, buff);
 	}
 	if (pos != -1 && pos + 1 < node->bytes_read)
+	{
+		free(node->remain);
 		node->remain = ft_substr(buff, pos + 1, ft_strlen(buff));
+	}
+
 	free(buff);
-	return (line);
+	return (node->line);
 }
 
 static char	*read_file(int fd, t_list *node)
@@ -90,7 +97,7 @@ static char	*read_file(int fd, t_list *node)
 	if (node->remain != NULL)
 	{
 		node->line = ft_strdup(node->remain);
-		//free(node->remain);
+		free(node->remain);
 		node->remain = ft_strdup("");
 	}
 	next_line = fetch_line(node, fd, 0);
@@ -108,20 +115,21 @@ char	*get_next_line(int fd)
 		node = malloc(sizeof(t_list));
 		node->call = 1;
 		node->line = "";
-		node->remain = "";
+		node->remain = ft_strdup("");
 		node->bytes_read = 2;
 	}
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0) 
 		return (NULL);
 	remain = read_remain(node);
-	if (remain != NULL)
+	if (remain != NULL) 
 		return (remain);
 	else
-	{
-		if (node->bytes_read == 0 && node->call != 1)
-			return (NULL);
 		next_line = read_file(fd, node);
-	}
 	node->call++;
+	if (node->bytes_read == 0)
+	{
+		free(node->remain);
+		free(node);
+	}
 	return (next_line);
 }

@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/12 16:38:54 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/12 22:11:41 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/13 10:14:43 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,31 +14,32 @@
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-	char	*pointer;
+	char	*ptr;
 	int		counter;
 
+	ptr = 0;
 	counter = 0;
-	pointer = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!pointer)
+	ptr = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
+	if (!ptr)
 		return (NULL);
 	if (s1)
 	{
 		while (s1[counter])
 		{
-			pointer[counter] = s1[counter];
+			ptr[counter] = s1[counter];
 			counter++;
 		}
 		free(s1);
 	}
 	while (*s2)
-		pointer[counter++] = *s2++;
-	pointer[counter] = '\0';
-	if (!*pointer)
+		ptr[counter++] = *s2++;
+	ptr[counter] = '\0';
+	if (!*ptr)
 	{
-		free(pointer);
+		free(ptr);
 		return (NULL);
 	}
-	return (pointer);
+	return (ptr);
 }
 
 void	*ft_calloc(size_t nmemb, size_t size)

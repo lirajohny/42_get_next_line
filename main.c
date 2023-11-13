@@ -24,11 +24,11 @@ int	main(void)
 	}
 	size_t len;
 //	write(fd_out, "teste\n", 6);
-	//printf("MAIN\n");
+	printf("MAIN\n");
 	while((str = get_next_line(fd)) != NULL)
 	{
-		//printf("\n- END - (main.c) escrito: %s\n", str);
-		//printf("------------------------------------------------------\n");
+		printf("\n- END - (main.c) escrito: %s\n", str);
+		printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
 		write(fd_out, str, len);
 		free(str);
