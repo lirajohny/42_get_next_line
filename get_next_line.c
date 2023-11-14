@@ -15,16 +15,15 @@ int	find_line(char *str)
 	}
 	while (str[index] != '\0')
 	{
-		printf("checking char = | %c | index is %i \n", str[index], index);
 		if (str[index] == '\n')
 		{
-			printf("\t\t \033[1;32m√\033[0m FOUND a new line at position | \033[1;33m %i \033[0m | index is %i\n", index + 1, index);
-			return (index + 1);
+			printf("\t\t \033[1;32m√\033[0m FOUND a new line at position | \033[1;33m %i \033[0m \n", index);
+			return (index);
 			break;
 		}
 		index++;
 	}
-		printf("\t\t \033[1;32m√\033[0m FOUND a new line at position | \033[1;33m %i \033[0m |\n", index + 1);
+			printf("\t\t => \033[1;31m X NO\033[0m new line\n");
 	return (0);
 }
 
@@ -39,10 +38,7 @@ static char	*rest_line(char *backup)
 	while (backup[i] && backup[i] != '\n')
 		i++;
 	if (!(backup[i]))
-	{
-		free(backup);
 		return (NULL);
-	}
 	if (backup[i] == '\n')
 		i++;
 	rest = malloc(sizeof(char) * ft_strlen(backup) - i + 1);
@@ -52,47 +48,20 @@ static char	*rest_line(char *backup)
 	while (backup[i])
 		rest[count++] = backup[i++];
 	rest[count] = '\0';
-	free(backup);
 	return (rest);
-}
-
-char	*check_last(char *last)
-{
-	printf("\033[1;33m CHECK LAST  FUNCTION \033[0m\n");
-	int		len;
-	char	*buffer;
-	int		i;
-
-	 printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m  LAST IS: \033[0m |\033[1;34m %s \033[0m| \n", last, last);
-	if (!last)
-		return (NULL);
-	i = find_line(last);
-	if (i == 0)
-	{
-		printf("\033[1;33m LEAVING \033[0m\n");
-		return(last);
-	}	
-	printf("PEGANDO LEN DO LAST \n");
-	len = ft_strlen(last);
-	buffer = malloc(sizeof(char) * (len - i) + 1);
-	i = 0;
-	while (*last != '\n')
-		buffer[i++] = *(last++);
-	buffer[i++] = *(last++);
-	buffer[i] = '\0';
-	 printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m >> UPDATED LAST IS: \033[0m |\033[1;34m %s \033[0m| \n", buffer, buffer);
-	printf("\033[1;33m LEAVING \033[0m\n");
-	return (buffer);
 }
 
 void ft_free(t_list **list)
 {
 	printf("\033[1;33m FREE  FUNCTION \033[0m\n");
-    t_list *current = *list;
+    t_list *current;
+	t_list	*next;
 
+	current = *list;
     while (current != NULL) 
 	{
-        t_list *next = current->next;
+        next = current->next;
+		printf("\tADDRESS | \033[1;91m %p \033[0m |  LIBERANDO: |\033[1;36m %s \033[0m| \n", current->content, current->content);
         free(current->content);
         free(current);
         current = next;
@@ -114,42 +83,43 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 	if (list == NULL)
         return NULL;
 
+	printf(CYAN"\t\t  >>>>  COUNTING LINK LEN <<<< "RESET "\n");
     while (current->next != NULL)
 	{
-		printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m contantdo o tamanho de: \033[0m |\033[1;34m %s \033[0m| \n", current->content, current->content);
+		printf("\tADDRESS | \033[1;91m %p \033[0m | contantdo o tamanho de:  |\033[1;34m %s \033[0m| \n", current->content, current->content);
         len += ft_strlen(current->content);
         current = current->next;
 		printf("\t\t\t current LEN = %i\n", len);
     }
-	printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m por fim contantdo o tamanho de: \033[0m |\033[1;34m %s \033[0m| \n", current->content, current->content);
+	printf("\tADDRESS | \033[1;91m %p \033[0m | por fim contantdo o tamanho de: |\033[1;34m %s \033[0m| \n", current->content, current->content);
 	len = len + find_line(current->content);
-	printf("\t\t\t TOTAL LEN = %i\n", len);
+	printf(CYAN"\t\t  >>>>  GOT LEN <<<< "RESET);
+	printf(" %d\n", len);
     
-	char *result = (char *)malloc(len + 1);
+	char *result = (char *)malloc(len + 2);
     result[0] = '\0';
 
     current = head;
-	printf("################## concatenando ##############\n");
-    while (i < len) 
+	printf(CYAN "\t\t################## concatenando ##############" RESET "\n");
+    while (i < len + 1) 
 	{
-		printf("i = %i | j = %i | len = %i |\n", i, j, len);
-		printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m CONCATENANDO: \033[0m |\033[1;34m %s \033[0m| \n", current->content, current->content);
+		printf("\tADDRESS | \033[1;91m %p \033[0m | CONCATENANDO: |\033[1;34m %s \033[0m| \n", current->content, current->content);
 		j = 0;
-		while (current->content[j] != '\0' && i < len)
+		while (current->content[j] != '\0' && i < len + 1)
 		{
 			result[i++] = current->content[j++]; 
-			printf("result[%i] = %c | current->content[%i] = %c\n", i - 1, result[i - 1], j - 1, current->content[j-1]);
+			printf("result[%i] = %c\n", i - 1, result[i - 1]);
 		}
         current = current->next;
     }
 	result[i] = '\0';
-	printf("################## fim  ##############\n");
-	printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m RESULT: \033[0m |\033[1;34m %s \033[0m| \n", result, result);
+	printf(CYAN "\t\t################## FIM  ##############" RESET "\n");
+	printf("\tADDRESS | \033[1;91m %p \033[0m | RESULT: |\033[1;34m %s \033[0m| \n", result, result);
 	printf("\033[1;33m LEAVING \033[0m\n");
     return result;			
 }
 
-void	read_file(t_list **list, int fd)
+int	read_file(t_list **list, int fd)
 {
 	printf("\033[1;33m READ_LINE FUNCTION \033[0m\n");
 	t_list	*new;
@@ -160,58 +130,56 @@ void	read_file(t_list **list, int fd)
 	pos = 0;
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
-		return ;
+		return (1);
 	
 	new = *list;
-
+	printf(CYAN"\t\t  ~~~~~~ STARTING LOOP ~~~~~~~ "RESET "\n");
 	while (1)
 	{
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (new->bytes_read == 0)
-			return ;
-		printf("\t\t ∑∑ byte_read\033[1;33m %i \033[0m ∑∑ \n", new->bytes_read);
+			return (1);
+		printf("\t ∑∑ byte_read\033[1;33m %i \033[0m ∑∑ \n", new->bytes_read);
 		buffer[new->bytes_read] = '\0';
-		printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m BUFFER NOW: \033[0m |\033[1;34m %s \033[0m| \n", buffer, buffer);
+		printf("\tADDRESS | \033[1;91m %p \033[0m |  BUFFER NOW: |\033[1;34m %s \033[0m| \n", buffer, buffer);
 		pos = find_line(buffer);
 		if (pos > 0 || buffer[0] == '\n')
 		{
-			printf("BREAKING THE HABIT\n");
+			printf(CYAN"\t\t~~~~~~~~  BREAKING LOOP ~~~~~~~~"RESET "\n");
 			new->next = ft_lstnew(buffer);
-			printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m PTR NOW: \033[0m |\033[1;34m %s \033[0m| \n", new->next->content, new->next->content);
 			break;
 		}
 		new->next = ft_lstnew(buffer);
-		printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m PTR NOW: \033[0m |\033[1;34m %s \033[0m| \n", new->next->content, new->next->content);
 		new = new->next;
 	}
+	return (0);
 	printf("\033[1;33m LEAVING \033[0m\n");
 }
 
 char	*get_next_line(int fd)
 {
+	printf("\033[1;33m GE_NEXT_LINE FUNCTION \033[0m\n");
 	t_list	*head;
 	char *next_line;
 	static char*	remain;
 	t_list	*last;
-	int pos;
+	int	check_error;
 	
-	//head = ft_create_list();
-	head = ft_lstnew("");
+	head = ft_lstnew(remain);
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (remain != NULL)
- 	{	
-		next_line = check_last(remain);
- 		if (next_line != NULL)
-			return (next_line);
-		head->content = next_line;
+	check_error = read_file(&head, fd);
+	if (check_error == 1)
+	{
+		ft_free(&head);
+		return (NULL);
 	}
-	read_file(&head, fd);
 	next_line = ft_get_line(&head, 0, 0);
 	last = ft_lstlast(head);
 	remain = rest_line(last->content);
-	printf("\tADDRESS | \033[1;91m %p \033[0m | \033[1;32m leaving REMAIN IS: \033[0m |\033[1;34m %s \033[0m| \n", remain, remain);
 	ft_free(&head);
+	printf("ADDRESS | \033[1;91m %p \033[0m | \033[1;32m leaving REMAIN IS: \033[0m |\033[1;34m %s \033[0m| \n", remain, remain);
+	printf("ADDRESS | \033[1;91m %p \033[0m | \033[1;32m leaving phrase  IS: \033[0m |\033[1;34m %s \033[0m| \n", next_line, next_line);
 	printf("\033[1;33m LEAVING \033[0m\n");
 	return (next_line);
 }
