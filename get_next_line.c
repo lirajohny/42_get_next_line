@@ -22,7 +22,7 @@ int	find_line(char *str)
 	return (0);
 }
 
-static char	*rest_line(char *backup)
+static char	*remain_line(char *backup)
 
 {
 	size_t	i;
@@ -50,31 +50,26 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 {
     t_list	*current;
 	t_list	*head = *list;
+	char	*result;
     int	len = 0;
 	
-
 	current = head;
 	if (list == NULL)
         return NULL;
-
     while (current->next != NULL)
 	{
         len += ft_strlen(current->content);
         current = current->next;
     }
 	len = len + find_line(current->content);
-    
-	char *result = (char *)malloc(len + 2);
+	result = (char *)malloc(len + 2);
     result[0] = '\0';
-
     current = head;
     while (i < len + 1) 
 	{
 		j = 0;
 		while (current->content[j] != '\0' && i < len + 1)
-		{
 			result[i++] = current->content[j++]; 
-		}
         current = current->next;
     }
 	result[i] = '\0';
@@ -138,7 +133,7 @@ char	*get_next_line(int fd)
 	}
 	next_line = ft_get_line(&head, 0, 0);
 	last = ft_lstlast(head);
-	remain = rest_line(last->content);
+	remain = remain_line(last->content);
 	ft_free(&head);
 	return (next_line);
 }
