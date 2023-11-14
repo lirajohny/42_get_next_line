@@ -163,14 +163,19 @@ char	*get_next_line(int fd)
 	char *next_line;
 	static char*	remain;
 	t_list	*last;
-	int	check_error;
+	static int	check_error;
 	
 	head = ft_lstnew(remain);
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	check_error = read_file(&head, fd);
-	if (check_error == 1)
+	check_error += read_file(&head, fd);
+	if (check_error != 0)
 	{
+		if (check_error == 1)
+		{
+			check_error++;
+			return (head->content);
+		}
 		ft_free(&head);
 		return (NULL);
 	}
@@ -178,8 +183,8 @@ char	*get_next_line(int fd)
 	last = ft_lstlast(head);
 	remain = rest_line(last->content);
 	ft_free(&head);
-	printf("ADDRESS | \033[1;91m %p \033[0m | \033[1;32m leaving REMAIN IS: \033[0m |\033[1;34m %s \033[0m| \n", remain, remain);
 	printf("ADDRESS | \033[1;91m %p \033[0m | \033[1;32m leaving phrase  IS: \033[0m |\033[1;34m %s \033[0m| \n", next_line, next_line);
+	printf("ADDRESS | \033[1;91m %p \033[0m | \033[1;32m leaving REMAIN IS: \033[0m |\033[1;34m %s \033[0m| \n", remain, remain);
 	printf("\033[1;33m LEAVING \033[0m\n");
 	return (next_line);
 }
