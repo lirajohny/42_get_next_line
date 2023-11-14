@@ -1,6 +1,25 @@
 #include "get_next_line.h"
 #include <stdio.h>
 
+void ft_free(t_list **list)
+{
+	printf("\033[1;33m FREE  FUNCTION \033[0m\n");
+    t_list *current;
+	t_list	*next;
+
+	current = *list;
+    while (current != NULL) 
+	{
+        next = current->next;
+		printf("\tADDRESS | \033[1;91m %p \033[0m |  LIBERANDO: |\033[1;36m %s \033[0m| \n", current->content, current->content);
+        free(current->content);
+        free(current);
+        current = next;
+    }
+    list = NULL;
+	printf("\033[1;33m LEAVING \033[0m\n");
+}
+
 t_list	*ft_lstlast(t_list *lst)
 {
 	t_list	*tmp;
@@ -45,39 +64,6 @@ t_list	*ft_lstnew(char *content)
 	return (new_node);
 }
 
-char	*ft_substr(char *s, unsigned int start, size_t len)
-{
-	size_t	i;
-	char	*str;
-	size_t	size;
-
-	if (!s)
-		return (NULL);
-	size = ft_strlen(s);
-	if (len > size)
-		return ("");
-	str = malloc(sizeof(char) * (len + 1));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (i < len && s[start + i] != '\0')
-	{
-		str[i] = s[start + i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-void	clear_list(t_list *list)
-{
-	if (!list)
-		return ;
-	while (list)
-	{
-		free(list->content);
-		list = list->next;
-	}
-}
 
 char	*ft_strjoin(char *s1, char *s2)
 {

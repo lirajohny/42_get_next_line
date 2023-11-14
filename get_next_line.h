@@ -31,4 +31,5 @@ t_list	*ft_lstnew(char *content);
 void	clear_list(t_list *head);
 char	*ft_strrchr(const char *s, int c);
 char	*ft_substr(char *s, unsigned int start, size_t len);
+void ft_free(t_list **list);
 #endif

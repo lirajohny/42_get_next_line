@@ -51,25 +51,6 @@ static char	*rest_line(char *backup)
 	return (rest);
 }
 
-void ft_free(t_list **list)
-{
-	printf("\033[1;33m FREE  FUNCTION \033[0m\n");
-    t_list *current;
-	t_list	*next;
-
-	current = *list;
-    while (current != NULL) 
-	{
-        next = current->next;
-		printf("\tADDRESS | \033[1;91m %p \033[0m |  LIBERANDO: |\033[1;36m %s \033[0m| \n", current->content, current->content);
-        free(current->content);
-        free(current);
-        current = next;
-    }
-    list = NULL;
-	printf("\033[1;33m LEAVING \033[0m\n");
-}
-
 char	*ft_get_line(struct s_list **list, int i, int j)
 {
 	printf("\033[1;33m GET_LINE FUNCTION \033[0m\n");
