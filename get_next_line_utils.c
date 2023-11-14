@@ -3,7 +3,6 @@
 
 void ft_free(t_list **list)
 {
-	printf("\033[1;33m FREE  FUNCTION \033[0m\n");
     t_list *current;
 	t_list	*next;
 
@@ -11,13 +10,11 @@ void ft_free(t_list **list)
     while (current != NULL) 
 	{
         next = current->next;
-		printf("\tADDRESS | \033[1;91m %p \033[0m |  LIBERANDO: |\033[1;36m %s \033[0m| \n", current->content, current->content);
         free(current->content);
         free(current);
         current = next;
     }
     list = NULL;
-	printf("\033[1;33m LEAVING \033[0m\n");
 }
 
 t_list	*ft_lstlast(t_list *lst)
@@ -64,34 +61,6 @@ t_list	*ft_lstnew(char *content)
 	return (new_node);
 }
 
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	char	*joined;
-	size_t	i;
-	size_t	j;
-	size_t	len;
-
-	i = 0;
-	j = 0;
-	len = ft_strlen(s1) + ft_strlen(s2);
-	joined = malloc(sizeof(char) * len + 1);
-	if (!joined)
-		return (NULL);
-	while (i < len)
-	{
-		if (i < ft_strlen(s1))
-			joined[i] = s1[i];
-		else
-		{
-			joined[i] = s2[j++];
-		}
-		i++;
-	}
-	joined[i] = '\0';
-	return (joined);
-}
-
 size_t	ft_strlen(char *s)
 {
 	int	i;
@@ -101,7 +70,6 @@ size_t	ft_strlen(char *s)
 	{
 		i++;
 	}
-	printf("FT_STRLEN %i\n", i);
 	return (i);
 }
 

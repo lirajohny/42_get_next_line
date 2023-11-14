@@ -91,13 +91,15 @@ int	read_file(t_list **list, int fd)
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (1);
-	
 	new = *list;
 	while (1)
 	{
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (new->bytes_read == 0)
+		{
+			free(buffer);
 			return (1);
+		}
 		buffer[new->bytes_read] = '\0';
 		pos = find_line(buffer);
 		if (pos > 0 || buffer[0] == '\n')
@@ -108,6 +110,7 @@ int	read_file(t_list **list, int fd)
 		new->next = ft_lstnew(buffer);
 		new = new->next;
 	}
+	free(buffer);
 	return (0);
 }
 
