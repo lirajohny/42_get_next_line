@@ -1,125 +1,116 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/12 16:38:54 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/13 10:14:43 by jlira            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "get_next_line.h"
+#include <stdio.h>
 
-char	*ft_strjoin(char *s1, char *s2)
+t_list	*ft_lstlast(t_list *lst)
 {
-	char	*ptr;
-	int		counter;
+	t_list	*tmp;
 
-	ptr = 0;
-	counter = 0;
-	ptr = malloc((ft_strlen(s1) + ft_strlen(s2) + 1) * sizeof(char));
-	if (!ptr)
+	if (!lst)
 		return (NULL);
-	if (s1)
+	tmp = lst;
+	while (tmp->next != NULL)
 	{
-		while (s1[counter])
-		{
-			ptr[counter] = s1[counter];
-			counter++;
-		}
-		free(s1);
+		tmp = tmp->next;
 	}
-	while (*s2)
-		ptr[counter++] = *s2++;
-	ptr[counter] = '\0';
-	if (!*ptr)
-	{
-		free(ptr);
-		return (NULL);
-	}
-	return (ptr);
+	return (tmp);
 }
 
-void	*ft_calloc(size_t nmemb, size_t size)
+t_list	*ft_lstnew(char *content)
 {
-	size_t	total_size;
-	void	*ptr;
-	int		c;
-	size_t	i;
-	char	*char_s;
+	t_list	*new_node;
+	char	*new_string;
+	int		i;
 
-	c = 0;
 	i = 0;
-	total_size = nmemb * size;
-	ptr = malloc(total_size);
-	char_s = (char *)ptr;
-	if (ptr != NULL)
+	new_node = (t_list *)malloc(sizeof(t_list));
+	if (!new_node)
+		return (NULL);
+	new_string = (char *)malloc(ft_strlen(content) + 1);
+	if (!new_string) 
+		return (NULL);
+	while (content[i] != '\0')
 	{
-		while (i < total_size)
-		{
-			char_s[i] = c;
-			i++;
-		}
+		new_string[i] = content[i];
+		i++;
 	}
-	ptr = char_s;
-	return (ptr);
+	new_string[i] = '\0';
+	new_node->content = new_string;
+	new_node->bytes_read = 0;
+	new_node->next = NULL;
+	return (new_node);
 }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	size_t	i;
-	size_t	len_src;
-	char	*destiny;
+	char	*str;
+	size_t	size;
 
 	if (!s)
 		return (NULL);
-	i = 0;
-	len_src = ft_strlen(s);
-	if (start > len_src)
-		return (ft_strdup(""));
-	else if (start + len > len_src)
-		len = len_src - start;
-	destiny = ft_calloc(len + 1, sizeof(char));
-	if ((!destiny))
+	size = ft_strlen(s);
+	if (len > size)
+		return ("");
+	str = malloc(sizeof(char) * (len + 1));
+	if (!str)
 		return (NULL);
-	while (s[start] && i < len)
+	i = 0;
+	while (i < len && s[start + i] != '\0')
 	{
-		destiny[i] = s[start];
+		str[i] = s[start + i];
 		i++;
-		start++;
 	}
-	destiny[i] = '\0';
-	return (destiny);
+	str[i] = '\0';
+	return (str);
+}
+void	clear_list(t_list *list)
+{
+	if (!list)
+		return ;
+	while (list)
+	{
+		free(list->content);
+		list = list->next;
+	}
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char	*joined;
+	size_t	i;
+	size_t	j;
+	size_t	len;
+
+	i = 0;
+	j = 0;
+	len = ft_strlen(s1) + ft_strlen(s2);
+	joined = malloc(sizeof(char) * len + 1);
+	if (!joined)
+		return (NULL);
+	while (i < len)
+	{
+		if (i < ft_strlen(s1))
+			joined[i] = s1[i];
+		else
+		{
+			joined[i] = s2[j++];
+		}
+		i++;
+	}
+	joined[i] = '\0';
+	return (joined);
 }
 
 size_t	ft_strlen(char *s)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	while (s[i] != '\0')
 	{
 		i++;
 	}
+	printf("FT_STRLEN %i\n", i);
 	return (i);
 }
 
-char	*ft_strdup(char *s1)
-{
-	char	*pointer;
-	int		counter;
-
-	pointer = malloc((ft_strlen(s1) + 1) * sizeof(char));
-	if (!pointer)
-		return (NULL);
-	counter = 0;
-	while (s1[counter] != '\0')
-	{
-		pointer[counter] = s1[counter];
-		counter++;
-	}
-	pointer[counter] = '\0';
-	return (pointer);
-}

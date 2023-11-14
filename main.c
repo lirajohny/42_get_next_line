@@ -8,7 +8,7 @@ int	main(void)
 	int fd_out;
 	char *str;
 
-	fd = open("input2.txt", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
+	fd = open("input3.txt", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
 	if (fd == -1)
 	{
 		printf("erro while opening input file\n");
@@ -25,8 +25,12 @@ int	main(void)
 	size_t len;
 //	write(fd_out, "teste\n", 6);
 	printf("MAIN\n");
+	int	i = 0;
 	while((str = get_next_line(fd)) != NULL)
 	{
+		if (i == 5)
+			break ;
+		i++;
 		printf("\n- END - (main.c) escrito: %s\n", str);
 		printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
