@@ -1,5 +1,6 @@
 #include <stdlib.h> 
 #include <unistd.h> 
+#include <stdio.h>
 #include "get_next_line.h"
 
 int	find_line(char *str)
@@ -56,6 +57,8 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 	len = 0;
 	head = *list;
 	current = head;
+	if (list == NULL)
+		return (NULL);
 	while (current->next != NULL)
 	{
 		len += ft_strlen(current->content);
@@ -83,13 +86,16 @@ int	read_file(t_list **list, int fd)
 	int		pos;
 
 	pos = 0;
-	new = *list;
-	if (pos > 0 || new->content[0] == '\n')
-		return (-1);
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (1);
+	new = *list;
 	pos = find_line(new->content);
+	if (pos > 0 || new->content[0] == '\n')
+	{
+		free(buffer);
+		return (-1);
+	}
 	while (1)
 	{
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
