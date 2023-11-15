@@ -2,7 +2,6 @@
 #include <stdio.h>
 void ft_free(t_list **list)
 {
-	//printf("\033[1;33m FREE  FUNCTION \033[0m\n");
     t_list *current;
 	t_list	*next;
 
@@ -10,13 +9,11 @@ void ft_free(t_list **list)
     while (current != NULL) 
 	{
         next = current->next;
-		//printf("\tADDRESS | \033[1;91m %p \033[0m |  LIBERANDO: |\033[1;36m %s \033[0m| \n", current->content, current->content);
         free(current->content);
         free(current);
         current = next;
     }
     list = NULL;
-	//printf("\033[1;33m LEAVING \033[0m\n");
 }
 
 t_list	*ft_lstlast(t_list *lst)
