@@ -8,25 +8,31 @@ int	main(void)
 	int fd_out;
 	char *str;
 
-	fd = open("input3.txt", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
+	fd = open("input2.txt", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
 	if (fd == -1)
 	{
-		printf("erro while opening input file\n");
+		//printf("erro while opening input file\n");
 		close(fd);
 		return (-1);
 	}
 	fd_out = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR); 
 	if (fd_out == -1)
 	{
-		printf("erro while opening output file\n");
+		//printf("erro while opening output file\n");
 		close(fd_out);
 		return (-1);
 	}
+	str = NULL;
+	write(fd, NULL, 1);
 	size_t len;
+	int	k = 0;
 	while((str = get_next_line(fd)) != NULL)
 	{
-		printf("\n- END - (main.c) escrito: %s\n", str);
-		printf("------------------------------------------------------\n");
+		if (k == POINT)
+			break ; 
+		k++;
+		//printf("\n- END - (main.c) escrito: %s\n", str);
+		//printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
 		write(fd_out, str, len);
 		free(str);
