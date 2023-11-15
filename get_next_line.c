@@ -86,16 +86,13 @@ int	read_file(t_list **list, int fd)
 	int		pos;
 
 	pos = 0;
+	new = *list;
+	if (pos > 0 || new->content[0] == '\n')
+		return (-1);
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (1);
-	new = *list;
 	pos = find_line(new->content);
-	if (pos > 0 || new->content[0] == '\n')
-	{
-		free(buffer);
-		return (-1);
-	}
 	while (1)
 	{
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
@@ -138,6 +135,7 @@ char	*get_next_line(int fd)
 			remain = remain_line(head->content, -1);
 			return (head->content);
 		}
+		free(remain);
 		ft_free(&head);
 		return (NULL);
 	}

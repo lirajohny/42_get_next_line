@@ -22,8 +22,6 @@ int	main(void)
 		close(fd_out);
 		return (-1);
 	}
-	str = NULL;
-	write(fd, NULL, 1);
 	size_t len;
 	while((str = get_next_line(fd)) != NULL)
 	{
