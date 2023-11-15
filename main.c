@@ -25,12 +25,8 @@ int	main(void)
 	str = NULL;
 	write(fd, NULL, 1);
 	size_t len;
-	int	k = 0;
 	while((str = get_next_line(fd)) != NULL)
 	{
-		if (k == POINT)
-			break ; 
-		k++;
 		//printf("\n- END - (main.c) escrito: %s\n", str);
 		//printf("------------------------------------------------------\n");
 		len = ft_strlen(str);

@@ -32,7 +32,35 @@ t_list	*ft_lstlast(t_list *lst)
 	}
 	return (tmp);
 }
-
+t_list	*ft_lstnew(char *content)
+{
+	t_list	*new_node;
+	char	*new_string;
+	int		i;
+	i = 0;
+	new_node = (t_list *)malloc(sizeof(t_list));
+	if (!new_node)
+		return (NULL);
+	if (content == NULL)
+		new_string = malloc(1);
+	else
+	{
+		new_string = (char *)malloc(ft_strlen(content) + 1);
+		if (!new_string) 
+			return (NULL);
+		while (content[i] != '\0')
+		{
+			new_string[i] = content[i];
+			i++;
+		}
+	}
+	new_string[i] = '\0';
+	new_node->content = new_string;
+	new_node->bytes_read = 0;
+	new_node->next = NULL;
+ 	return (new_node);
+ }
+/*
 t_list	*ft_lstnew(char *content)
 {
 	t_list	*new_node;
@@ -49,7 +77,7 @@ t_list	*ft_lstnew(char *content)
 	new_node->bytes_read = 0;
 	new_node->next = NULL;
 	return (new_node);
-}
+}*/
 
 size_t	ft_strlen(char *s)
 {

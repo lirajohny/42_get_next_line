@@ -122,7 +122,10 @@ int	read_file(t_list **list, int fd)
 	new = *list;
 	pos = find_line(new->content);
 	if (pos > 0 || new->content[0] == '\n')
+	{
+		free(buffer);
 		return (-1);
+	}
 	//printf(CYAN"\t\t  ~~~~~~ STARTING LOOP ~~~~~~~ "RESET "\n");
 	while (1)
 	{
@@ -167,6 +170,7 @@ char	*get_next_line(int fd)
 	{
 		if (check_error == -1)
 		{
+			free(remain);
 			remain = remain_line(head->content, -1);
 			//printf("ADDRESS | \033[1;91m %p \033[0m | \033[1;32m leaving REMAIN IS: \033[0m |\033[1;34m %s \033[0m| \n", remain, remain);
 			//printf("ADDRESS | \033[1;91m %p \033[0m | \033[1;32m leaving phrase IS: \033[0m |\033[1;34m %s \033[0m| \n", head->content, head->content);
