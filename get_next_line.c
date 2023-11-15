@@ -1,12 +1,11 @@
 #include <stdlib.h> 
 #include <unistd.h> 
-#include <stdio.h>
 #include "get_next_line.h"
 
 int	find_line(char *str)
 {
 	int	index;
-	
+
 	index = 0;
 	if (str[0] == '\n')
 		return (0);
@@ -49,32 +48,32 @@ static char	*remain_line(char *content, int line)
 
 char	*ft_get_line(struct s_list **list, int i, int j)
 {
-    t_list	*current;
-	t_list	*head = *list;
+	t_list	*current;
+	t_list	*head;
 	char	*result;
-    int	len = 0;
-	
+	int		len;
+
+	len = 0;
+	head = *list;
 	current = head;
-	if (list == NULL)
-        return NULL;
-    while (current->next != NULL)
+	while (current->next != NULL)
 	{
-        len += ft_strlen(current->content);
-        current = current->next;
-    }
+		len += ft_strlen(current->content);
+		current = current->next;
+	}
 	len = len + find_line(current->content) + 1;
 	result = (char *)malloc(len + 1);
-    result[0] = '\0';
-    current = head;
-    while (i + 1 <= len) 
+	result[0] = '\0';
+	current = head;
+	while (i + 1 <= len)
 	{
 		j = 0;
 		while (current->content[j] != '\0' && i + 1 <= len)
-			result[i++] = current->content[j++]; 
-        current = current->next;
-    }
+			result[i++] = current->content[j++];
+		current = current->next;
+	}
 	result[i] = '\0';
-    return result;			
+	return (result);
 }
 
 int	read_file(t_list **list, int fd)
@@ -84,16 +83,13 @@ int	read_file(t_list **list, int fd)
 	int		pos;
 
 	pos = 0;
+	new = *list;
+	if (pos > 0 || new->content[0] == '\n')
+		return (-1);
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (1);
-	new = *list;
 	pos = find_line(new->content);
-	if (pos > 0 || new->content[0] == '\n')
-	{
-		free(buffer);
-		return (-1);
-	}
 	while (1)
 	{
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
@@ -107,7 +103,7 @@ int	read_file(t_list **list, int fd)
 		if (pos > 0 || buffer[0] == '\n')
 		{
 			new->next = ft_lstnew(buffer);
-			break;
+			break ;
 		}
 		new->next = ft_lstnew(buffer);
 		new = new->next;
@@ -118,12 +114,12 @@ int	read_file(t_list **list, int fd)
 
 char	*get_next_line(int fd)
 {
-	t_list	*head;
-	char *next_line;
-	static char*	remain;
-	t_list	*last;
-	int	check_error;
-	
+	t_list		*head;
+	char		*next_line;
+	static char	*remain;
+	t_list		*last;
+	int			check_error;
+
 	head = ft_lstnew(remain);
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
