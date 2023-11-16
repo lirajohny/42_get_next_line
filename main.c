@@ -9,7 +9,7 @@ int	main(void)
 	int fd_out;
 	char *str;
 
-	fd = open("input2.txt", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
+	fd = open("input.txt", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
 	if (fd == -1)
 	{
 		//printf("erro while opening input file\n");
@@ -29,6 +29,7 @@ int	main(void)
 		//printf("\n- END - (main.c) escrito: %s\n", str);
 		//printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
+		printf("%s\n",str);
 		write(fd_out, str, len);
 		free(str);
 	}

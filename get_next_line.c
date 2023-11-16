@@ -43,10 +43,9 @@ static char	*remain_line(char *content, int line)
 	new_remain[count] = '\0';
 	if (line != -1)
 		content[line + 1] = '\0';
-	(void)line;
 	return (new_remain);
 }
-
+#include <stdio.h>
 char	*ft_get_line(struct s_list **list, int i, int j)
 {
 	t_list	*current;
@@ -57,7 +56,7 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 	len = 0;
 	head = *list;
 	current = head;
-	if (list == NULL)
+	if (current->next->content == NULL)
 		return (NULL);
 	while (current->next != NULL)
 	{
@@ -125,22 +124,19 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	head = ft_lstnew(remain);
+
 	check_error = read_file(&head, fd);
-	if (check_error != 0)
+	last = ft_lstlast(head);
+	if (check_error == -2)
 	{
-		if (check_error == -1)
-		{
-			remain = remain_line(head->content, -1);
-			char *str = ft_strdup(head->content);
-			ft_free(&head);
-			return (str);
-		}
 		ft_free(&head);
 		return (NULL);
 	}
-	next_line = ft_get_line(&head, 0, 0);
-	last = ft_lstlast(head);
 	remain = remain_line(last->content, -1);
+	if (check_error != 0)
+		next_line = ft_strdup(last->content);
+	else
+		next_line = ft_get_line(&head, 0, 0);
 	ft_free(&head);
 	return (next_line);
 }
