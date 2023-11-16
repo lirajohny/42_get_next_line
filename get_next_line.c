@@ -43,6 +43,7 @@ static char	*remain_line(char *content, int line)
 	new_remain[count] = '\0';
 	if (line != -1)
 		content[line + 1] = '\0';
+	(void)line;
 	return (new_remain);
 }
 
@@ -130,7 +131,9 @@ char	*get_next_line(int fd)
 		if (check_error == -1)
 		{
 			remain = remain_line(head->content, -1);
-			return (head->content);
+			char *str = ft_strdup(head->content);
+			ft_free(&head);
+			return (str);
 		}
 		ft_free(&head);
 		return (NULL);

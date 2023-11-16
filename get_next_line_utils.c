@@ -12,8 +12,6 @@ void ft_free(t_list **list)
     while (current != NULL) 
 	{
 		count_free++;
-		//printf("\033[1;31m FREE \033[0m >> %i <<\n", count_free);
-		//printf("\tADDRESS | \033[1;36m %p \033[0m | LIBERANDO: |\033[1;36m %s \033[0m| \n", current->content, current->content);
         next = current->next;
         free(current->content);
         free(current);
@@ -45,7 +43,6 @@ t_list	*ft_lstnew(char *content)
 	if (!new_node)
 		return (NULL);
 	count_lstnew++;
-	//printf("\033[1;33m lst NEw FUNCTION \033[0m >> %i <<\n", count_lstnew);
 	if (content == NULL)
 		new_string = malloc(1);
 	else
@@ -62,7 +59,6 @@ t_list	*ft_lstnew(char *content)
 	free(content);
 	new_string[i] = '\0';
 	new_node->content = new_string;
-	//printf("\tADDRESS | \033[1;91m %p \033[0m | CRIANDO: |\033[1;36m %s \033[0m| \n", new_node->content, new_node->content);
 	new_node->bytes_read = 0;
 	new_node->next = NULL;
  	return (new_node);
