@@ -122,9 +122,9 @@ char	*get_next_line(int fd)
 	t_list		*last;
 	int			check_error;
 
-	head = ft_lstnew(remain);
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
+	head = ft_lstnew(remain);
 	check_error = read_file(&head, fd);
 	if (check_error != 0)
 	{
