@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
+/*   Updated: 2023/11/16 20:12:42 by jlira            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdlib.h> 
 #include <unistd.h> 
 #include "get_next_line.h"
@@ -45,17 +57,15 @@ static char	*remain_line(char *content, int line)
 		content[line + 1] = '\0';
 	return (new_remain);
 }
-#include <stdio.h>
+
 char	*ft_get_line(struct s_list **list, int i, int j)
 {
 	t_list	*current;
-	t_list	*head;
 	char	*result;
 	int		len;
 
 	len = 0;
-	head = *list;
-	current = head;
+	current = *list;
 	if (current->next->content == NULL)
 		return (NULL);
 	while (current->next != NULL)
@@ -65,8 +75,7 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 	}
 	len = len + find_line(current->content) + 1;
 	result = (char *)malloc(len + 1);
-	result[0] = '\0';
-	current = head;
+	current = *list;
 	while (i + 1 <= len)
 	{
 		j = 0;
@@ -81,33 +90,23 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 int	read_file(t_list **list, int fd)
 {
 	t_list	*new;
-	char	*buffer;
-	int		pos;
+	char	buffer[BUFFER_SIZE + 1];
 
-	pos = 0;
 	new = *list;
-	pos = find_line(new->content);
-	if (pos > 0 || new->content[0] == '\n')
+	if (new->content[0] == '\n' || find_line(new->content) > 0)
 		return (-1);
 	while (1)
 	{
-		buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
-		if (!buffer)
-			return (1);
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (new->bytes_read == 0)
-		{
-			free(buffer);
 			return (-2);
-		}
 		buffer[new->bytes_read] = '\0';
-		pos = find_line(buffer);
-		if (pos > 0 || buffer[0] == '\n')
+		if (find_line(buffer) > 0 || buffer[0] == '\n')
 		{
-			new->next = ft_lstnew(buffer);
+			new->next = ft_lstnew(buffer, 0);
 			break ;
 		}
-		new->next = ft_lstnew(buffer);
+		new->next = ft_lstnew(buffer, 0);
 		new = new->next;
 	}
 	return (0);
@@ -123,8 +122,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	head = ft_lstnew(remain);
-
+	head = ft_lstnew(remain, 1);
 	check_error = read_file(&head, fd);
 	last = ft_lstlast(head);
 	if (check_error == -2)
