@@ -9,9 +9,7 @@ typedef struct s_list
 	int	bytes_read;
 	struct s_list *next;
 }	t_list;
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 10
-#endif
+
 char *get_next_line(int fd);
 size_t	ft_strlen(char *s);
 t_list	*ft_lstlast(t_list *lst);

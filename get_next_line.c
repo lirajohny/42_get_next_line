@@ -87,12 +87,12 @@ int	read_file(t_list **list, int fd)
 
 	pos = 0;
 	new = *list;
+	pos = find_line(new->content);
 	if (pos > 0 || new->content[0] == '\n')
 		return (-1);
 	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buffer)
 		return (1);
-	pos = find_line(new->content);
 	while (1)
 	{
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
