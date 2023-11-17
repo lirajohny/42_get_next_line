@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/16 20:12:42 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/17 11:26:24 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static char	*remain_line(char *content, int line)
 		return (NULL);
 	if (content[i] == '\n')
 		line = i++;
-	new_remain = malloc(sizeof(char) * ft_strlen(content) - i + 1);
+	new_remain = (char *)malloc(sizeof(char) * ft_strlen(content) - i + 1);
 	if (!(new_remain))
 		return (NULL);
 	count = 0;
@@ -118,9 +118,9 @@ char	*get_next_line(int fd)
 	char		*next_line;
 	static char	*remain;
 	t_list		*last;
-	int			check_error;
+	static int			check_error;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0 || check_error == -2 )
 		return (NULL);
 	head = ft_lstnew(remain, 1);
 	check_error = read_file(&head, fd);

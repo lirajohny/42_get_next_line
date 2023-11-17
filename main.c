@@ -3,7 +3,30 @@
 #include "get_next_line.h"
 
 
-int	main(void)
+
+int   main(int ac, char **av)
+{
+  char  *line;
+  int   fd1;
+  //int   fd2;
+
+  (void)ac;
+  (void)av;
+  fd1 = open("input", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR);
+  //fd2 = open(av[2], O_RDONLY);
+  line = get_next_line(fd1);
+  printf("returned: %s\n", line);
+  line = get_next_line(fd1);
+  printf("returned: %s\n", line);
+  line = get_next_line(fd1);
+  printf("returned: %s\n", line);
+  line = get_next_line(fd1);
+  printf("returned: %s\n", line);
+  close(fd1);
+  return (0);
+}
+
+/*int	main(void)
 {
 	int fd;
 	int fd_out;
@@ -37,4 +60,4 @@ int	main(void)
 	close(fd);
 	close(fd_out);
     return (0);
-}
+}*/

@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/16 20:17:05 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/17 10:58:18 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,17 @@ t_list	*ft_lstnew(char *content, int condition)
 	if (!new_node)
 		return (NULL);
 	if (content == NULL)
+	{
 		new_string = ft_strdup("");
+		if (!new_string)
+			return (NULL);
+	}
 	else
+	{
 		new_string = ft_strdup(content);
+		if (!new_string)
+			return (NULL);
+	}
 	new_node->content = new_string;
 	new_node->bytes_read = 0;
 	new_node->next = NULL;
