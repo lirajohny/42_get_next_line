@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/17 10:58:18 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/20 15:52:37 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ t_list	*ft_lstlast(t_list *lst)
 	return (tmp);
 }
 
-t_list	*ft_lstnew(char *content, int condition)
+t_list	*ft_lstnew(char *content)
 {
 	t_list	*new_node;
 	char	*new_string;
@@ -65,8 +65,7 @@ t_list	*ft_lstnew(char *content, int condition)
 	new_node->content = new_string;
 	new_node->bytes_read = 0;
 	new_node->next = NULL;
-	if (condition == 1)
-		free(content);
+	free(content);
 	return (new_node);
 }
 

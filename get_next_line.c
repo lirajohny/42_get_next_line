@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/20 15:01:11 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/20 15:51:39 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,23 +90,27 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 int	read_file(t_list **list, int fd)
 {
 	t_list	*new;
-	char	buffer[BUFFER_SIZE + 1];
+	char	*buffer;
 
 	new = *list;
 	if (new->content[0] == '\n' || find_line(new->content) > 0)
 		return (-1);
 	while (1)
 	{
+		buffer = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (new->bytes_read == 0)
+		{
+			free(buffer);
 			return (-2);
+		}
 		buffer[new->bytes_read] = '\0';
 		if (find_line(buffer) > 0 || buffer[0] == '\n')
 		{
-			new->next = ft_lstnew(buffer, 0);
+			new->next = ft_lstnew(buffer);
 			break ;
 		}
-		new->next = ft_lstnew(buffer, 0);
+		new->next = ft_lstnew(buffer);
 		new = new->next;
 	}
 	return (0);
@@ -122,7 +126,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0 || check_error == -2 )
 		return (NULL);
-	head = ft_lstnew(remain, 1);
+	head = ft_lstnew(remain);
 	check_error = read_file(&head, fd);
 	if (check_error == -2)
 	{
