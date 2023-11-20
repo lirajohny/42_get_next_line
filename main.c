@@ -15,13 +15,15 @@ int   main(int ac, char **av)
   fd1 = open("input", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR);
   //fd2 = open(av[2], O_RDONLY);
   line = get_next_line(fd1);
-  printf("returned: %s\n", line);
+  printf("returned: %s <\n", line);
+  free(line);
   line = get_next_line(fd1);
-  printf("returned: %s\n", line);
+  printf("returned: %s <\n", line);
+  free(line);
   line = get_next_line(fd1);
-  printf("returned: %s\n", line);
+  printf("returned: %s <\n", line);
   line = get_next_line(fd1);
-  printf("returned: %s\n", line);
+  printf("returned: %s <\n", line);
   close(fd1);
   return (0);
 }

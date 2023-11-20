@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/17 11:26:24 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/20 15:01:11 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,14 +124,14 @@ char	*get_next_line(int fd)
 		return (NULL);
 	head = ft_lstnew(remain, 1);
 	check_error = read_file(&head, fd);
-	last = ft_lstlast(head);
 	if (check_error == -2)
 	{
 		ft_free(&head);
 		return (NULL);
 	}
+	last = ft_lstlast(head);
 	remain = remain_line(last->content, -1);
-	if (check_error != 0)
+	if (check_error == -1)
 		next_line = ft_strdup(last->content);
 	else
 		next_line = ft_get_line(&head, 0, 0);
