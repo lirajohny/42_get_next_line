@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/20 15:52:37 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/20 16:29:03 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ char	*ft_strdup(char *s1)
 	int		i;
 
 	i = 0;
-	new_string = (char *)malloc(ft_strlen(s1) + 1);
+	new_string = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 1));
 	if (!new_string)
 		return (NULL);
 	while (s1[i] != '\0')

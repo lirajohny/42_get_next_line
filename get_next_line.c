@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/20 15:51:39 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/20 16:29:54 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 		current = current->next;
 	}
 	len = len + find_line(current->content) + 1;
-	result = (char *)malloc(len + 1);
+	result = (char *)malloc(sizeof(char) * len + 1);
 	current = *list;
 	while (i + 1 <= len)
 	{

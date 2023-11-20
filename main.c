@@ -3,7 +3,7 @@
 #include "get_next_line.h"
 
 
-
+/*
 int   main(int ac, char **av)
 {
   char  *line;
@@ -14,27 +14,25 @@ int   main(int ac, char **av)
   (void)av;
   fd1 = open("input", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR);
   //fd2 = open(av[2], O_RDONLY);
+  while ((line = get_next_line(fd1)) != NULL) 
+  {
+	printf("returned: %s <\n", line);
+	free(line);
+  }
   line = get_next_line(fd1);
   printf("returned: %s <\n", line);
-  free(line);
-  line = get_next_line(fd1);
-  printf("returned: %s <\n", line);
-  free(line);
-  line = get_next_line(fd1);
-  printf("returned: %s <\n", line);
-  line = get_next_line(fd1);
-  printf("returned: %s <\n", line);
+  //free(line);
   close(fd1);
   return (0);
 }
-
-/*int	main(void)
+*/
+int	main(void)
 {
 	int fd;
 	int fd_out;
 	char *str;
 
-	fd = open("input.txt", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
+	fd = open("input", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
 	if (fd == -1)
 	{
 		//printf("erro while opening input file\n");
@@ -51,10 +49,9 @@ int   main(int ac, char **av)
 	size_t len;
 	while((str = get_next_line(fd)) != NULL)
 	{
-		//printf("\n- END - (main.c) escrito: %s\n", str);
-		//printf("------------------------------------------------------\n");
+		printf("\n- END - (main.c) escrito: >> %s <<\n", str);
+		printf("------------------------------------------------------\n");
 		len = ft_strlen(str);
-		printf("%s\n",str);
 		write(fd_out, str, len);
 		free(str);
 	}
@@ -62,4 +59,4 @@ int   main(int ac, char **av)
 	close(fd);
 	close(fd_out);
     return (0);
-}*/
+}
