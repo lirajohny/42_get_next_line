@@ -6,13 +6,41 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/20 16:29:54 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/29 18:41:10 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h> 
 #include <unistd.h> 
+#include <stdio.h>
 #include "get_next_line.h"
+
+/*
+static char	*remain_line(char *content, int line)
+{
+	size_t	i;
+	char	*new_remain;
+	size_t	count;
+
+	i = 0;
+	while (content[i] && content[i] != '\n')
+		i++;
+	if (!(content[i]))
+		return (NULL);
+	if (content[i] == '\n')
+		line = i++;
+	new_remain = (char *)malloc(sizeof(char) * ft_strlen(content) - i + 2);
+	if (!(new_remain))
+		return (NULL);
+	count = 0;
+	while (content[i])
+		new_remain[count++] = content[i++];
+	new_remain[count] = '\0';
+	if (line != -1)
+		content[line + 1] = '\0';
+	return (new_remain);
+}
+*/
 
 int	find_line(char *str)
 {
@@ -30,31 +58,22 @@ int	find_line(char *str)
 	return (0);
 }
 
-static char	*remain_line(char *content, int line)
+static char *remain_line(char *content)
 {
-	size_t	i;
 	char	*new_remain;
-	size_t	count;
+	int		count;
+	int		pos;
 
-	i = 0;
-	while (content[i] && content[i] != '\n')
-		i++;
-	if (!(content[i]))
+	if (*content == '\0')
 		return (NULL);
-	if (content[i] == '\n')
-		line = i++;
-	new_remain = (char *)malloc(sizeof(char) * ft_strlen(content) - i + 1);
+	pos = find_line(content) + 1;
+	count = 0;
+	new_remain = (char *)malloc(sizeof(char) * ft_strlen(content) - pos + 2);
 	if (!(new_remain))
 		return (NULL);
-	count = 0;
-	while (content[i])
-	{
-		new_remain[count++] = content[i];
-		i++;
-	}
+	while (content[pos])
+		new_remain[count++] = content[pos++];
 	new_remain[count] = '\0';
-	if (line != -1)
-		content[line + 1] = '\0';
 	return (new_remain);
 }
 
@@ -89,8 +108,8 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 
 int	read_file(t_list **list, int fd)
 {
-	t_list	*new;
 	char	*buffer;
+	t_list	*new;
 
 	new = *list;
 	if (new->content[0] == '\n' || find_line(new->content) > 0)
@@ -113,6 +132,7 @@ int	read_file(t_list **list, int fd)
 		new->next = ft_lstnew(buffer);
 		new = new->next;
 	}
+	*list = new;
 	return (0);
 }
 
@@ -124,19 +144,19 @@ char	*get_next_line(int fd)
 	t_list		*last;
 	static int			check_error;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, &next_line, 0) < 0 || check_error == -2 )
+	if (fd < 0 || BUFFER_SIZE <= 0 || check_error == -2 )
 		return (NULL);
 	head = ft_lstnew(remain);
-	check_error = read_file(&head, fd);
+	last = head;
+	check_error = read_file(&last, fd);
 	if (check_error == -2)
 	{
 		ft_free(&head);
 		return (NULL);
 	}
-	last = ft_lstlast(head);
-	remain = remain_line(last->content, -1);
+	remain = remain_line(last->content);
 	if (check_error == -1)
-		next_line = ft_strdup(last->content);
+		next_line = ft_substr(last->content, 0, find_line(last->content) + 1);
 	else
 		next_line = ft_get_line(&head, 0, 0);
 	ft_free(&head);

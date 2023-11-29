@@ -47,10 +47,12 @@ int	main(void)
 		return (-1);
 	}
 	size_t len;
+	int i = 1; 
 	while((str = get_next_line(fd)) != NULL)
 	{
-		printf("\n- END - (main.c) escrito: >> %s <<\n", str);
+		printf("\n- END - (main.c) [%i] escrito: >> %s <<\n",i,str);
 		printf("------------------------------------------------------\n");
+		i++;
 		len = ft_strlen(str);
 		write(fd_out, str, len);
 		free(str);

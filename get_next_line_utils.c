@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/20 16:29:03 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/29 18:31:08 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,28 @@ void	ft_free(t_list **list)
 	list = NULL;
 }
 
-t_list	*ft_lstlast(t_list *lst)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
-	t_list	*tmp;
+	size_t	i;
+	char	*str;
+	size_t	size;
 
-	if (!lst)
+	if (!s)
 		return (NULL);
-	tmp = lst;
-	while (tmp->next != NULL)
+	size = ft_strlen(s);
+	if (len > size)
+		return (ft_strdup(""));
+	str = malloc(sizeof(char) * (len + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (i < len && s[start + i] != '\0')
 	{
-		tmp = tmp->next;
+		str[i] = s[start + i];
+		i++;
 	}
-	return (tmp);
+	str[i] = '\0';
+	return (str);
 }
 
 t_list	*ft_lstnew(char *content)
@@ -87,7 +97,7 @@ char	*ft_strdup(char *s1)
 	int		i;
 
 	i = 0;
-	new_string = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 1));
+	new_string = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 2));
 	if (!new_string)
 		return (NULL);
 	while (s1[i] != '\0')
