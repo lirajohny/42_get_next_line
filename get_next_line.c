@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/29 18:41:10 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/29 20:22:54 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	find_line(char *str)
 	int	index;
 
 	index = 0;
-	if (str[0] == '\n')
+	if (!str || *str == '\0' || str[0] == '\n')
 		return (0);
 	while (str[index] != '\0')
 	{
@@ -63,15 +63,17 @@ static char *remain_line(char *content)
 	char	*new_remain;
 	int		count;
 	int		pos;
+	int		len;
 
 	if (*content == '\0')
 		return (NULL);
 	pos = find_line(content) + 1;
 	count = 0;
-	new_remain = (char *)malloc(sizeof(char) * ft_strlen(content) - pos + 2);
+	len = ft_strlen(content);
+	new_remain = (char *)malloc(sizeof(char) * len - pos + 2);
 	if (!(new_remain))
 		return (NULL);
-	while (content[pos])
+	while (content[pos] && pos <= len)
 		new_remain[count++] = content[pos++];
 	new_remain[count] = '\0';
 	return (new_remain);
@@ -125,19 +127,18 @@ int	read_file(t_list **list, int fd)
 		}
 		buffer[new->bytes_read] = '\0';
 		if (find_line(buffer) > 0 || buffer[0] == '\n')
-		{
-			new->next = ft_lstnew(buffer);
 			break ;
-		}
 		new->next = ft_lstnew(buffer);
 		new = new->next;
 	}
+	new->next = ft_lstnew(buffer);
+	new = new->next;
 	*list = new;
 	return (0);
 }
 
 char	*get_next_line(int fd)
-{
+{	
 	t_list		*head;
 	char		*next_line;
 	static char	*remain;
@@ -147,6 +148,8 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || check_error == -2 )
 		return (NULL);
 	head = ft_lstnew(remain);
+	if (!head)
+		return (NULL);
 	last = head;
 	check_error = read_file(&last, fd);
 	if (check_error == -2)
@@ -154,6 +157,10 @@ char	*get_next_line(int fd)
 		ft_free(&head);
 		return (NULL);
 	}
+	/*if (last->next != NULL)
+		last = last->next;
+		*/
+//	last = ft_lstlast(head);
 	remain = remain_line(last->content);
 	if (check_error == -1)
 		next_line = ft_substr(last->content, 0, find_line(last->content) + 1);
