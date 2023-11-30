@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	char *conteudo_do_arquivo = argv[1];
-	int fd = open("arquivo_saida.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+	int fd = open("arquivo_saida.txt", O_RDWR | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 	if (fd == -1) {
 		perror("Erro ao criar o arquivo");
 		return 1;

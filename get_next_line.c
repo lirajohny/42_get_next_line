@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/30 10:35:24 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/30 11:19:32 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	find_line(char *str)
 	int	index;
 
 	index = 0;
-	if (!str || *str == '\0' || str[0] == '\n')
+	if (str[0] == '\n')
 		return (0);
 	while (str[index] != '\0')
 	{
@@ -28,7 +28,7 @@ int	find_line(char *str)
 			return (index);
 		index++;
 	}
-	return (0);
+	return (-1);
 }
 
 static char	*remain_line(char *content)
@@ -54,6 +54,7 @@ static char	*remain_line(char *content)
 
 char	*ft_get_line(struct s_list **list, int i, int j)
 {
+	//printf("\033[1;33m GET_LINE FUNCTION \033[0m\n");
 	t_list	*current;
 	char	*result;
 	int		len;
@@ -64,27 +65,34 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 		return (NULL);
 	while (current->next != NULL)
 	{
+		//printf("\033[1;32m  current: \033[0m |\033[1;34m %s \033[0m|\n", current->content);
 		len += ft_strlen(current->content);
 		current = current->next;
 	}
-	len = len + find_line(current->content) + 1;
-	result = (char *)malloc(sizeof(char) * len + 1);
+//	printf("\t\t ∑∑ partial len \033[1;33m %i \033[0m ∑∑ \n", len);
+
+	len = len + find_line(current->content);
+	//printf("\t\t ∑∑ total len \033[1;33m %i \033[0m ∑∑ \n", len);
+	result = (char *)malloc(sizeof(char) * len + 2);
 	current = *list;
-	while (i + 1 <= len)
+	while (i < len + 1)
 	{
 		j = 0;
-		while (current->content[j] != '\0' && i + 1 <= len)
+		while (current->content[j] != '\0' && i < len + 1)
+		{
+			//printf("\033[1;32m  copied: \033[0m |\033[1;34m result[%i] == %c \033[0m|\n", i, current->content[j]);
 			result[i++] = current->content[j++];
+		}
 		current = current->next;
 	}
 	result[i] = '\0';
-	printf("\033[1;32m  result: \033[0m |\033[1;34m %s \033[0m|\n", result);
+	//printf("\033[1;32m  result: \033[0m |\033[1;34m %s \033[0m|\n", result);
 	return (result);
 }
 
 int	read_file(t_list **list, int fd)
 {
-		printf("\033[1;33m READ_FILE FUNCTION \033[0m\n");
+		//printf("\033[1;33m READ_FILE FUNCTION \033[0m\n");
 	char	*buffer;
 	t_list	*new;
 
@@ -95,20 +103,21 @@ int	read_file(t_list **list, int fd)
 	{
 		buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
-		printf("\t\t ∑∑ byte_read\033[1;33m %i \033[0m ∑∑ \n", new->bytes_read);
-		printf("\t\t ... Loops starts ...\n");
-		if (new->bytes_read == -1)
-			break ; 
-		if (new->bytes_read == 0)
+		//printf("\t\t ∑∑ byte_read\033[1;33m %i \033[0m ∑∑ \n", new->bytes_read);
+		//printf("\t\t ... Loops starts ...\n");
+		/*if (new->bytes_read == 0)
 		{
 			free(buffer);
+			printf("\033[1;33m LEAVING with error \033[0m\n");
 			return (-2);
-		}
+		}*/
+		if (new->bytes_read == 0)
+			break ;
 		buffer[new->bytes_read] = '\0';
-		printf("\t\t => buffer is: |\033[1;34m %s \033[0m|\n", buffer);
+		//printf("\t\t => buffer is: |\033[1;34m %s \033[0m|\n", buffer);
 		if (find_line(buffer) > 0 || buffer[0] == '\n')
 		{
-			printf("\t\t \033[1;32m√\033[0m FOUND a new line\n");
+			//printf("\t\t \033[1;32m√\033[0m FOUND a new line\n");
 			break ;
 		}
 		new->next = ft_lstnew(buffer);
@@ -117,13 +126,13 @@ int	read_file(t_list **list, int fd)
 	new->next = ft_lstnew(buffer);
 	new = new->next;
 	*list = new;
-		printf("\033[1;33m LEAVING \033[0m\n");
+		//printf("\033[1;33m LEAVING \033[0m\n");
 	return (0);
 }
 
 char	*get_next_line(int fd)
 {
-		printf("\033[1;33m GNL FUNCTION \033[0m\n");
+		//printf("\033[1;33m GNL FUNCTION \033[0m\n");
 	t_list		*head;
 	char		*next_line;
 	static char	*remain;
@@ -146,8 +155,8 @@ char	*get_next_line(int fd)
 	else
 		next_line = ft_get_line(&head, 0, 0);
 	ft_free(&head);
-	printf("\033[1;32m  Returning: \033[0m |\033[1;34m %s \033[0m|\n", next_line);
- 	printf("\033[1;32m  saving: \033[0m |\033[1;34m %s \033[0m|\n", remain);
-		printf("\033[1;33m LEAVING \033[0m\n");
+	//printf("\033[1;32m  Returning: \033[0m |\033[1;34m %s \033[0m|\n", next_line);
+ 	//printf("\033[1;32m  saving: \033[0m |\033[1;34m %s \033[0m|\n", remain);
+		//printf("\033[1;33m LEAVING \033[0m\n");
 	return (next_line);
 }
