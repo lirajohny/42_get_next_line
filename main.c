@@ -57,6 +57,7 @@ int	main(void)
 		write(fd_out, str, len);
 		free(str);
 	}
+	printf("\n- LEAVING (main.c)  got: >> %s <<\n",str);
 	free(str);
 	close(fd);
 	close(fd_out);

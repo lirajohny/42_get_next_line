@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/29 20:22:54 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/29 21:08:06 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,6 @@
 #include <unistd.h> 
 #include <stdio.h>
 #include "get_next_line.h"
-
-/*
-static char	*remain_line(char *content, int line)
-{
-	size_t	i;
-	char	*new_remain;
-	size_t	count;
-
-	i = 0;
-	while (content[i] && content[i] != '\n')
-		i++;
-	if (!(content[i]))
-		return (NULL);
-	if (content[i] == '\n')
-		line = i++;
-	new_remain = (char *)malloc(sizeof(char) * ft_strlen(content) - i + 2);
-	if (!(new_remain))
-		return (NULL);
-	count = 0;
-	while (content[i])
-		new_remain[count++] = content[i++];
-	new_remain[count] = '\0';
-	if (line != -1)
-		content[line + 1] = '\0';
-	return (new_remain);
-}
-*/
 
 int	find_line(char *str)
 {
@@ -139,10 +112,10 @@ int	read_file(t_list **list, int fd)
 
 char	*get_next_line(int fd)
 {	
-	t_list		*head;
+	t_list		*head = NULL;
 	char		*next_line;
 	static char	*remain;
-	t_list		*last;
+	t_list		*last = NULL;
 	static int			check_error;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || check_error == -2 )
@@ -157,10 +130,6 @@ char	*get_next_line(int fd)
 		ft_free(&head);
 		return (NULL);
 	}
-	/*if (last->next != NULL)
-		last = last->next;
-		*/
-//	last = ft_lstlast(head);
 	remain = remain_line(last->content);
 	if (check_error == -1)
 		next_line = ft_substr(last->content, 0, find_line(last->content) + 1);
