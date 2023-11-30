@@ -1,13 +1,26 @@
-#ifndef	GET_NEXT_LINE_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jlira <jlira@student.42.rio>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/29 21:42:32 by jlira             #+#    #+#             */
+/*   Updated: 2023/11/29 21:42:34 by jlira            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#include <stdlib.h>
-#include <unistd.h>
+# include <stdlib.h>
+# include <unistd.h>
+
 typedef struct s_list
 {
-	char *content;
-	int	bytes_read;
-	struct s_list *next;
+	char			*content;
+	int				bytes_read;
+	struct s_list	*next;
 }	t_list;
 
 char	*get_next_line(int fd);
