@@ -4,7 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
-
+/*
 int main(int argc, char *argv[]) {
 	if (argc < 2) {
 		fprintf(stderr, "Uso: %s <conteudo_do_arquivo>\n", argv[0]);
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 
 	return 0;
 }
-/*
+
 int   main(int ac, char **av)
 {
 	char  *line;
@@ -63,7 +63,7 @@ int   main(int ac, char **av)
 	return (0);
 }*/
 
-/*
+
 int	main(void)
 {
 	int fd;
@@ -93,6 +93,8 @@ int	main(void)
 		i++;
 		len = ft_strlen(str);
 		write(fd_out, str, len);
+		if (i == 83)
+			break ;
 		free(str);
 	}
 	printf("\n- LEAVING (main.c)  got: >> %s <<\n",str);
@@ -101,4 +103,4 @@ int	main(void)
 	close(fd_out);
     return (0);
 }
-*/
+
