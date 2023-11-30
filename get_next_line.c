@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/29 21:34:43 by jlira            ###   ########.fr       */
+/*   Updated: 2023/11/30 10:35:24 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,13 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 		current = current->next;
 	}
 	result[i] = '\0';
+	printf("\033[1;32m  result: \033[0m |\033[1;34m %s \033[0m|\n", result);
 	return (result);
 }
 
 int	read_file(t_list **list, int fd)
 {
+		printf("\033[1;33m READ_FILE FUNCTION \033[0m\n");
 	char	*buffer;
 	t_list	*new;
 
@@ -93,36 +95,44 @@ int	read_file(t_list **list, int fd)
 	{
 		buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
+		printf("\t\t ∑∑ byte_read\033[1;33m %i \033[0m ∑∑ \n", new->bytes_read);
+		printf("\t\t ... Loops starts ...\n");
+		if (new->bytes_read == -1)
+			break ; 
 		if (new->bytes_read == 0)
 		{
 			free(buffer);
 			return (-2);
 		}
 		buffer[new->bytes_read] = '\0';
+		printf("\t\t => buffer is: |\033[1;34m %s \033[0m|\n", buffer);
 		if (find_line(buffer) > 0 || buffer[0] == '\n')
+		{
+			printf("\t\t \033[1;32m√\033[0m FOUND a new line\n");
 			break ;
+		}
 		new->next = ft_lstnew(buffer);
 		new = new->next;
 	}
 	new->next = ft_lstnew(buffer);
 	new = new->next;
 	*list = new;
+		printf("\033[1;33m LEAVING \033[0m\n");
 	return (0);
 }
 
 char	*get_next_line(int fd)
 {
+		printf("\033[1;33m GNL FUNCTION \033[0m\n");
 	t_list		*head;
 	char		*next_line;
 	static char	*remain;
 	t_list		*last;
 	static int	check_error;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || check_error == -2)
+	if (fd < 0 || BUFFER_SIZE <= 0 || check_error == -2 || fd == 1000)
 		return (NULL);
 	head = ft_lstnew(remain);
-	if (!head)
-		return (NULL);
 	last = head;
 	check_error = read_file(&last, fd);
 	if (check_error == -2)
@@ -136,5 +146,8 @@ char	*get_next_line(int fd)
 	else
 		next_line = ft_get_line(&head, 0, 0);
 	ft_free(&head);
+	printf("\033[1;32m  Returning: \033[0m |\033[1;34m %s \033[0m|\n", next_line);
+ 	printf("\033[1;32m  saving: \033[0m |\033[1;34m %s \033[0m|\n", remain);
+		printf("\033[1;33m LEAVING \033[0m\n");
 	return (next_line);
 }
