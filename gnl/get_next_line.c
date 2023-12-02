@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/02 10:34:25 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/02 10:48:32 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,10 @@ char	*get_next_line(int fd)
 	last = head;
 	check_error = read_file(&last, fd);
 	if (head->bytes_read == 0)
+	{
+		ft_free(&head);
 		return (NULL);
+	}
 	//printf("\t\t\t\t\t check error >>>> %i \n", check_error);
 	if (check_error == -1)
 		next_line = ft_substr(last->content, 0, find_line(last->content) + 1);
