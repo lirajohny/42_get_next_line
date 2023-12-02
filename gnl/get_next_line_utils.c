@@ -6,12 +6,12 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/02 10:12:10 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/02 13:15:25 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
+
 void	ft_free(t_list **list)
 {
 	t_list	*current;
@@ -21,7 +21,6 @@ void	ft_free(t_list **list)
 	while (current != NULL)
 	{
 		next = current->next;
-		//printf("\t\t => freeing (old) |\033[1;34m %s \033[0m|\n", current->content);
 		free(current->content);
 		free(current);
 		current = next;
@@ -37,7 +36,9 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 
 	if (!s)
 		return (NULL);
-	size = ft_strlen(s);
+	size = 0;
+	while (s[size] != '\0')
+		 size++;
 	if (len > size)
 		return (ft_strdup(""));
 	str = malloc(sizeof(char) * (len + 1));
@@ -65,11 +66,7 @@ t_list	*ft_lstnew(char *content, int bytes, int check)
 		return (NULL);
 	}
 	if (content == NULL)
-	{
 		new_string = ft_strdup("");
-		if (!new_string)
-			return (NULL);
-	}
 	else
 	{
 		new_string = ft_strdup(content);
@@ -82,24 +79,42 @@ t_list	*ft_lstnew(char *content, int bytes, int check)
 	free(content);
 	return (new_node);
 }
-
-size_t	ft_strlen(char *s)
+#include <stdio.h>
+size_t	ft_strlen(t_list **list, int check, char *last)
 {
-	int	i;
+	t_list	*current;
+	int		len;
+	int		j;
 
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
+	len = 0;
+	j = 0;
+	if (check == 0)
+	{
+		while (last[len] != '\0')
+		 len++;
+		return (len);
+	}
+	current = *list;
+	j = find_line(last);
+	while (current->next != NULL)
+	{
+		len += ft_strlen(list, 0, current->content);
+		current = current->next;
+	}
+	if (j == -1)
+		len += ft_strlen(list, 0, current->content);
+	len = len + find_line(current->content) + 1;
+	return (len);
 }
 
 char	*ft_strdup(char *s1)
 {
 	char	*new_string;
+	t_list	*list;
 	int		i;
 
 	i = 0;
-	new_string = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 1));
+	new_string = (char *)malloc(sizeof(char) * (ft_strlen(&list, 0, s1) + 1));
 	if (!new_string)
 		return (NULL);
 	while (s1[i] != '\0')

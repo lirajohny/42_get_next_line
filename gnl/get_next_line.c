@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/02 10:48:32 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/02 13:16:22 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	find_line(char *str)
 	return (-1);
 }
 
-static char	*remain_line(char *content)
+static char	*remain_line(t_list **last, char *content)
 {
 	char	*new_remain;
 	int		count;
@@ -42,7 +42,7 @@ static char	*remain_line(char *content)
 		return (NULL);
 	pos = find_line(content) + 1;
 	count = 0;
-	len = ft_strlen(content);
+	len = ft_strlen(last, 0, content);
 	new_remain = (char *)malloc(sizeof(char) * len - pos + 2);
 	if (!(new_remain))
 		return (NULL);
@@ -52,42 +52,27 @@ static char	*remain_line(char *content)
 	return (new_remain);
 }
 
-char	*ft_get_line(struct s_list **list, int i, int j)
+char	*ft_get_line(struct s_list **list, char *last, int i, int j)
 {
 	t_list	*current;
 	char	*result;
 	int		len;
 
-	len = 0;
-	current = *list;
-	while (current->next != NULL)
-	{
-		len += ft_strlen(current->content);
-		current = current->next;
-	}
-	//printf("\t\t ∑∑ total partial len  \033[1;33m %i \033[0m ∑∑ \n", len);
-	if (find_line(current->content) != -1)
-		len = len + find_line(current->content) + 1;
-	else
-		len = len + ft_strlen(current->content);
-	//printf("\t\t ∑∑ total len  \033[1;33m %i \033[0m ∑∑ \n", len);
+	len = ft_strlen(list, 1, last);
 	result = (char *)malloc(sizeof(char) * len + 1);
 	current = *list;
 	while (current != NULL) 
 	{
-					//printf("\t\t => current->content (old) |\033[1;34m %s \033[0m|\n", current->content);
 		j = 0;
 		while (current->content[j] != '\0' && i < len)
 		{
 			result[i++] = current->content[j++];
-			//printf("\t\t => result[%i] = |\033[1;34m %c \033[0m|\n",i - 1, result[i - 1]);
 			if (current->content[j - 1] == '\n')
 				break ;
 		}
 		current = current->next;
 	}
 	result[i] = '\0';
-				//printf("\t\t => result (old) |\033[1;34m %s \033[0m|\n", result);
 	return (result);
 }
 
@@ -103,7 +88,6 @@ int	read_file(t_list **list, int fd)
 	{
 		buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
-		//printf("\t\t ∑∑ bytes  \033[1;33m %i \033[0m ∑∑ \n", new->bytes_read);
 		buffer[new->bytes_read] = '\0';
 		if (new->bytes_read > 0)
 		{
@@ -132,11 +116,9 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd == 1000)
 		return (NULL);
-//	printf("\t\t ∑∑ check  \033[1;33m %i \033[0m ∑∑ \n", check_error);
 	head = ft_lstnew(remain, 1, check_error);
 	if (head == NULL)
 	{
-		//printf("here\n");
 		ft_free(&head);
 		return (NULL);
 	}
@@ -147,12 +129,11 @@ char	*get_next_line(int fd)
 		ft_free(&head);
 		return (NULL);
 	}
-	//printf("\t\t\t\t\t check error >>>> %i \n", check_error);
 	if (check_error == -1)
 		next_line = ft_substr(last->content, 0, find_line(last->content) + 1);
 	else
-		next_line = ft_get_line(&head, 0, 0);
-	remain = remain_line(last->content);
+		next_line = ft_get_line(&head, last->content, 0, 0);
+	remain = remain_line(&last, last->content);
 	ft_free(&head);
 	return (next_line);
 }
