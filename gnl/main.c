@@ -4,7 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
-/*
+
 int main(int argc, char *argv[]) {
 	if (argc < 2) {
 		fprintf(stderr, "Uso: %s <conteudo_do_arquivo>\n", argv[0]);
@@ -25,9 +25,54 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	lseek(fd, 0, SEEK_SET);
-	char *line = get_next_line(fd);
-	printf("returned: %s <\n", line);
-	if (strcmp(line, conteudo_do_arquivo) == 0)
+	char *line = get_next_line(fd); //1
+	if (line == NULL)
+	{
+		printf("- End - got %s\n", line);
+		return (1);
+	}
+	printf("returned: %s<\n", line);
+	if (strcmp(line, "teste\n") == 0)
+		printf("\033[1;32m OK \033[0m\n");
+	else 
+		printf("\033[1;31m KO \033[0m\n");
+	free(line);
+
+	line = get_next_line(fd); //2
+	if (line == NULL)
+	{
+		printf("- End - got %s\n", line);
+		return (1);
+	}
+	printf("returned: %s<\n", line);
+	if (strcmp(line, "teste") == 0)
+		printf("\033[1;32m OK \033[0m\n");
+	else 
+		printf("\033[1;31m KO \033[0m\n");
+	free(line);
+// new call
+	line = get_next_line(fd); //3
+	if (line == NULL)
+	{
+		printf("- End - got %s\n", line);
+		return (1);
+	}
+	printf("returned: %s<\n", line);
+	if (line == NULL)
+		printf("\033[1;32m OK \033[0m\n");
+	else 
+		printf("\033[1;31m KO \033[0m\n");
+	free(line);
+
+// new call
+	line = get_next_line(fd); //3
+	if (line == NULL)
+	{
+		printf("- End - got %s\n", line);
+		return (1);
+	}
+	printf("returned: %s<\n", line);
+	if (line == NULL)
 		printf("\033[1;32m OK \033[0m\n");
 	else 
 		printf("\033[1;31m KO \033[0m\n");
@@ -35,71 +80,4 @@ int main(int argc, char *argv[]) {
 	close(fd);
 
 	return 0;
-}*/
-/*
-int   main(int ac, char **av)
-{
-	char  *line;
-	int   fd;
-
-	const char *str = av[1];
-	(void)ac;
-	printf("av[1] is : %s <\n", str);
-	fd = open(str, O_RDWR); 
-	printf("fd is : %i <\n", fd);
-	if (fd == -1) {
-        perror("Erro ao abrir o arquivo");
-        fprintf(stderr, "errno = %d\n", errno);
-        return 1;
-    }
-	line = get_next_line(fd);
-	printf("returned: %s <\n", line);
-	if (strcmp(line, str) == 0)
-		printf("\033[1;32m OK \033[0m\n");
-	else 
-		printf("\033[1;31m KO \033[0m\n");
-	free(line);
-	close(fd);
-	return (0);
-}*/
-
-
-int	main(void)
-{
-	int fd;
-	int fd_out;
-	char *str;
-
-	fd = open("output", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR); 
-	if (fd == -1)
-	{
-		//printf("erro while opening input file\n");
-		close(fd);
-		return (-1);
-	}
-	fd_out = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR); 
-	if (fd_out == -1)
-	{
-		//printf("erro while opening output file\n");
-		close(fd_out);
-		return (-1);
-	}
-	size_t len;
-	int i = 1; 
-	while((str = get_next_line(fd)) != NULL)
-	{
-		printf("\n- END - (main.c) [%i] escrito: >> %s <<\n",i,str);
-		printf("------------------------------------------------------\n");
-		i++;
-		len = ft_strlen(str);
-		write(fd_out, str, len);
-		if (i == 83)
-			break ;
-		free(str);
-	}
-	printf("\n- LEAVING (main.c)  got: >> %s <<\n",str);
-	free(str);
-	close(fd);
-	close(fd_out);
-    return (0);
 }

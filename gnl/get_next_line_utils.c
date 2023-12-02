@@ -6,12 +6,12 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/30 21:37:31 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/02 10:07:35 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
+#include <stdio.h>
 void	ft_free(t_list **list)
 {
 	t_list	*current;
@@ -21,6 +21,7 @@ void	ft_free(t_list **list)
 	while (current != NULL)
 	{
 		next = current->next;
+		printf("\t\t => freeing (old) |\033[1;34m %s \033[0m|\n", current->content);
 		free(current->content);
 		free(current);
 		current = next;
@@ -59,7 +60,10 @@ t_list	*ft_lstnew(char *content, int bytes, int check)
 
 	new_node = (t_list *)malloc(sizeof(t_list));
 	if (!new_node || check == -2)
+	{
+		free(new_node);	
 		return (NULL);
+	}
 	if (content == NULL)
 	{
 		new_string = ft_strdup("");

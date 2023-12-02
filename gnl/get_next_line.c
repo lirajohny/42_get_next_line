@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/11/30 21:55:26 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/02 10:09:53 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,12 @@ char	*ft_get_line(struct s_list **list, int i, int j)
 		len += ft_strlen(current->content);
 		current = current->next;
 	}
-	len = len + find_line(current->content) + 2;
+	//printf("\t\t ∑∑ total partial len  \033[1;33m %i \033[0m ∑∑ \n", len);
+	if (find_line(current->content) != -1)
+		len = len + find_line(current->content) + 1;
+	else
+		len = len + ft_strlen(current->content);
+	//printf("\t\t ∑∑ total len  \033[1;33m %i \033[0m ∑∑ \n", len);
 	result = (char *)malloc(sizeof(char) * len + 1);
 	current = *list;
 	while (current != NULL) 
@@ -130,6 +135,7 @@ char	*get_next_line(int fd)
 	head = ft_lstnew(remain, 1, check_error);
 	if (head == NULL)
 	{
+		//printf("here\n");
 		ft_free(&head);
 		return (NULL);
 	}
