@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/02 10:09:53 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/02 10:34:25 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ int	read_file(t_list **list, int fd)
 	{
 		buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
+		//printf("\t\t ∑∑ bytes  \033[1;33m %i \033[0m ∑∑ \n", new->bytes_read);
 		buffer[new->bytes_read] = '\0';
 		if (new->bytes_read > 0)
 		{
@@ -141,6 +142,8 @@ char	*get_next_line(int fd)
 	}
 	last = head;
 	check_error = read_file(&last, fd);
+	if (head->bytes_read == 0)
+		return (NULL);
 	//printf("\t\t\t\t\t check error >>>> %i \n", check_error);
 	if (check_error == -1)
 		next_line = ft_substr(last->content, 0, find_line(last->content) + 1);

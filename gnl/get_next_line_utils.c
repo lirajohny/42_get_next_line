@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/02 10:07:35 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/02 10:12:10 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_free(t_list **list)
 	while (current != NULL)
 	{
 		next = current->next;
-		printf("\t\t => freeing (old) |\033[1;34m %s \033[0m|\n", current->content);
+		//printf("\t\t => freeing (old) |\033[1;34m %s \033[0m|\n", current->content);
 		free(current->content);
 		free(current);
 		current = next;
