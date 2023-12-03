@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/02 13:16:22 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/02 21:24:26 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,14 +117,10 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd == 1000)
 		return (NULL);
 	head = ft_lstnew(remain, 1, check_error);
-	if (head == NULL)
-	{
-		ft_free(&head);
-		return (NULL);
-	}
 	last = head;
-	check_error = read_file(&last, fd);
-	if (head->bytes_read == 0)
+	if (head != NULL)
+		check_error = read_file(&last, fd);
+	if (head == NULL || head->bytes_read == 0)
 	{
 		ft_free(&head);
 		return (NULL);
