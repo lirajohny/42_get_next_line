@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/04 17:03:10 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/04 17:45:50 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,14 @@ char	*fetch_line(struct s_list **list)
 	return (copy_line(list, len));
 }
 
-int	read_file(t_list **list, int fd)
+char	*read_file(t_list **head, t_list **last, int fd)
 {
 	char	*buffer;
 	t_list	*new;
 
-	new = *list;
+	new = *last;
 	if (new->content[0] == '\n' || find_line(new->content) > 0)
-		return (-1);
+		return (ft_substr(new->content, 0, find_line(new->content)));
 	while (new->bytes_read > 0)
 	{
 		buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
@@ -95,15 +95,15 @@ int	read_file(t_list **list, int fd)
 			{
 				new->next = ft_lstnew(buffer, new->bytes_read, 0);
 				new = new->next;
-				*list = new;
-				return (0);
+				*last = new;
+				return (fetch_line(head));
 			}
 			new->next = ft_lstnew(buffer, new->bytes_read, 0);
 			new = new->next;
 		}
 	}
 	free(buffer);
-	return (-2);
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
@@ -112,25 +112,18 @@ char	*get_next_line(int fd)
 	char		*next_line;
 	static char	*remain;
 	t_list		*last;
-	static int	check_error;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	head = ft_lstnew(remain, 1, 0); // check_error or 0
+	head = ft_lstnew(remain, 1);
 	last = head;
-	if (head != NULL)
-		check_error = read_file(&last, fd);
-	if (head == NULL || head->bytes_read <= 0)
+	next_line = read_file(&head, &last, fd);
+	if (next_line == NULL || head == NULL || head->bytes_read <= 0)
 	{
 		ft_free(&head);
 		return (NULL);
 	}
-	if (check_error == -1)
-		next_line = ft_substr(last->content, 0, find_line(last->content));
-	else
-		next_line = fetch_line(&head);
-	remain = ft_substr(last->content, find_line(last->content),
-			ft_strlen(last->content));
+	remain = ft_substr(last->content, find_line(last->content), ft_strlen(last->content));
 	ft_free(&head);
 	return (next_line);
 }
