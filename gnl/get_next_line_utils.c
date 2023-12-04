@@ -34,6 +34,7 @@ char *ft_substr(char *s, unsigned int start, size_t len) {
   if (!s)
     return (NULL);
   size = ft_strlen(s);
+  // printf("\t\t\tlen is %i and size is %i\n", (int)len, (int)size);
   if (len > size)
     return (ft_strdup(""));
   str = malloc(sizeof(char) * (len + 1));
@@ -79,8 +80,6 @@ size_t ft_strlen(char *s) {
   i = 0;
   while (s[i] != '\0') {
     i++;
-    if (s[i] != '\0' && s[i] == '\n')
-      return (i + 1);
   }
   return (i);
 }
