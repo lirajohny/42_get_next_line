@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/04 16:30:50 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/04 17:55:14 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ char *ft_substr(char *s, unsigned int start, size_t len)
 	return (str);
 }
 
-t_list *ft_lstnew(char *content, int bytes, int check)
+t_list *ft_lstnew(char *content, int bytes)
 {
 	t_list *new_node;
 	char *new_string;
 
 	new_node = (t_list *)malloc(sizeof(t_list));
-	if (!new_node || check == -2)
+	if (!new_node)
 	{
 		free(new_node);
 		return (NULL);

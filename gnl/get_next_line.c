@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/04 17:45:50 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/04 17:55:48 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,27 +79,24 @@ char	*fetch_line(struct s_list **list)
 char	*read_file(t_list **head, t_list **last, int fd)
 {
 	char	*buffer;
-	t_list	*new;
 
-	new = *last;
-	if (new->content[0] == '\n' || find_line(new->content) > 0)
-		return (ft_substr(new->content, 0, find_line(new->content)));
-	while (new->bytes_read > 0)
+	if ((*last)->content[0] == '\n' || find_line((*last)->content) > 0)
+		return (ft_substr((*last)->content, 0, find_line((*last)->content)));
+	while ((*last)->bytes_read > 0)
 	{
 		buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
-		buffer[new->bytes_read] = '\0';
-		if (new->bytes_read > 0)
+		(*last)->bytes_read = read(fd, buffer, BUFFER_SIZE);
+		buffer[(*last)->bytes_read] = '\0';
+		if ((*last)->bytes_read > 0)
 		{
 			if (find_line(buffer) > 0 || buffer[0] == '\n')
 			{
-				new->next = ft_lstnew(buffer, new->bytes_read, 0);
-				new = new->next;
-				*last = new;
+				(*last)->next = ft_lstnew(buffer, (*last)->bytes_read);
+				*last = (*last)->next;
 				return (fetch_line(head));
 			}
-			new->next = ft_lstnew(buffer, new->bytes_read, 0);
-			new = new->next;
+			(*last)->next = ft_lstnew(buffer, (*last)->bytes_read);
+			*last = (*last)->next;
 		}
 	}
 	free(buffer);
