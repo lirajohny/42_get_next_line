@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jlira <jlira@student.42.rio>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 21:42:32 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/07 12:46:14 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/07 12:46:06 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 10
+# endif
+# ifndef MAX_FD
+#  define MAX_FD 10
 # endif
 # include <stdlib.h>
 # include <unistd.h>

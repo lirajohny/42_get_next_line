@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/07 11:52:19 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/07 12:39:35 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*fetch_line(struct s_list **list)
 	i = 0;
 	while (current->next != NULL)
 	{
-		len += ft_strlen(current->content);
+		len += BUFFER_SIZE; 
 		current = current->next;
 	}
 	i = get_line(current->content);
