@@ -10,7 +10,7 @@ int main(void) {
   int fd_out;
   char *str;
 
-  fd = open("2", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR);
+  fd = open("multiple", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR);
   if (fd == -1) {
     // printf("erro while opening input file\n");
     close(fd);

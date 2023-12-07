@@ -6,16 +6,16 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/04 17:55:14 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/07 05:33:04 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void ft_free(t_list **list)
+void	ft_free(t_list **list)
 {
-	t_list *current;
-	t_list *next;
+	t_list	*current;
+	t_list	*next;
 
 	current = *list;
 	while (current != NULL)
@@ -28,17 +28,25 @@ void ft_free(t_list **list)
 	list = NULL;
 }
 
-char *ft_substr(char *s, unsigned int start, size_t len)
+#include <stdio.h>
+char	*ft_substr(char *s, unsigned int start, size_t len, int check)
 {
-	size_t i;
-	char *str;
-	size_t size;
+	size_t	i;
+	char	*str;
+	size_t	size;
 
+	size = 0;
+//	printf("total size is %li | start is %li | total len is %li\n", (long int)size, (long int)start, (long int)len);
+//	printf("\033[1;32m  string is: \033[0m |\033[1;34m %s \033[0m|\n", s);
 	if (!s)
+		return (NULL);
+	if (check == 1 && (!s || len == 0 || start == 0))
 		return (NULL);
 	size = ft_strlen(s);
 	if (len > size)
-		return (str = ft_strdup(""));
+		return (NULL);
+	if (len == 0)
+		return (s);
 	str = malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (NULL);
@@ -52,10 +60,10 @@ char *ft_substr(char *s, unsigned int start, size_t len)
 	return (str);
 }
 
-t_list *ft_lstnew(char *content, int bytes)
+t_list	*ft_lstnew(char *content, int bytes)
 {
-	t_list *new_node;
-	char *new_string;
+	t_list	*new_node;
+	char	*new_string;
 
 	new_node = (t_list *)malloc(sizeof(t_list));
 	if (!new_node)
@@ -64,11 +72,9 @@ t_list *ft_lstnew(char *content, int bytes)
 		return (NULL);
 	}
 	if (content == NULL)
-	{
 		new_string = ft_strdup("");
-		if (!new_string)
-			return (NULL);
-	} else {
+	else
+	{
 		new_string = ft_strdup(content);
 		if (!new_string)
 			return (NULL);
@@ -80,9 +86,9 @@ t_list *ft_lstnew(char *content, int bytes)
 	return (new_node);
 }
 
-size_t ft_strlen(char *s)
+size_t	ft_strlen(char *s)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (s[i] != '\0')
@@ -90,10 +96,10 @@ size_t ft_strlen(char *s)
 	return (i);
 }
 
-char *ft_strdup(char *s1)
+char	*ft_strdup(char *s1)
 {
-	char *new_string;
-	int i;
+	char	*new_string;
+	int		i;
 
 	i = 0;
 	new_string = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 1));
