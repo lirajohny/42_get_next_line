@@ -6,62 +6,41 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:58:37 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/02 21:24:26 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/07 11:52:19 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-int	find_line(char *str)
+int	get_line(char *str)
 {
 	int	index;
 
 	index = 0;
 	if (str[0] == '\n')
-		return (0);
+		return (1);
 	while (str[index] != '\0')
 	{
 		if (str[index] == '\n')
-			return (index);
+			return (index + 1);
 		index++;
 	}
-	return (-1);
+	return (0);
 }
 
-static char	*remain_line(t_list **last, char *content)
-{
-	char	*new_remain;
-	int		count;
-	int		pos;
-	int		len;
-
-	if (*content == '\0')
-		return (NULL);
-	pos = find_line(content) + 1;
-	count = 0;
-	len = ft_strlen(last, 0, content);
-	new_remain = (char *)malloc(sizeof(char) * len - pos + 2);
-	if (!(new_remain))
-		return (NULL);
-	while (content[pos] && pos <= len)
-		new_remain[count++] = content[pos++];
-	new_remain[count] = '\0';
-	return (new_remain);
-}
-
-char	*ft_get_line(struct s_list **list, char *last, int i, int j)
+char	*copy_line(struct s_list **list, int len)
 {
 	t_list	*current;
 	char	*result;
-	int		len;
+	int		i;
+	int		j;
 
-	len = ft_strlen(list, 1, last);
 	result = (char *)malloc(sizeof(char) * len + 1);
 	current = *list;
-	while (current != NULL) 
+	i = 0;
+	while (current != NULL)
 	{
 		j = 0;
 		while (current->content[j] != '\0' && i < len)
@@ -76,60 +55,77 @@ char	*ft_get_line(struct s_list **list, char *last, int i, int j)
 	return (result);
 }
 
-int	read_file(t_list **list, int fd)
+char	*fetch_line(struct s_list **list)
+{
+	t_list	*current;
+	int		i;
+	int		len;
+
+	current = *list;
+	len = 0;
+	i = 0;
+	while (current->next != NULL)
+	{
+		len += ft_strlen(current->content);
+		current = current->next;
+	}
+	i = get_line(current->content);
+	if (i == 0)
+		len += ft_strlen(current->content);
+	len += i;
+	return (copy_line(list, len));
+}
+
+char	*read_file(t_list **head, t_list **last, int fd, char *rest)
 {
 	char	*buffer;
-	t_list	*new;
+	int		i;
 
-	new = *list;
-	if (new->content[0] == '\n' || find_line(new->content) > 0)
-		return (-1);
-	while (new->bytes_read > 0)
+	i = 0;
+	if (get_line((*last)->content) > 0)
+		return (ft_substr((*last)->content, 0, get_line((*last)->content), 0));
+	while ((*last)->bytes > 0)
 	{
 		buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-		new->bytes_read = read(fd, buffer, BUFFER_SIZE);
-		buffer[new->bytes_read] = '\0';
-		if (new->bytes_read > 0)
+		(*last)->bytes = read(fd, buffer, BUFFER_SIZE);
+		if ((*last)->bytes > 0 || rest || ((*last)->bytes == 0 && i > 0))
 		{
-			if (find_line(buffer) > 0 || buffer[0] == '\n')
+			buffer[(*last)->bytes] = '\0';
+			if (get_line(buffer) > 0 || rest || ((*last)->bytes == 0 && i > 0))
 			{
-				new->next = ft_lstnew(buffer, new->bytes_read, 0);
-				new = new->next;
-				*list = new;
-				return (0) ;
+				(*last)->next = ft_lstnew(buffer, (*last)->bytes, &i);
+				*last = (*last)->next;
+				return (fetch_line(head));
 			}
-			new->next = ft_lstnew(buffer, new->bytes_read, 0);
-			new = new->next;
+			(*last)->next = ft_lstnew(buffer, (*last)->bytes, &i);
+			*last = (*last)->next;
 		}
 	}
 	free(buffer);
-	return (-2);
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
 {
 	t_list		*head;
 	char		*next_line;
-	static char	*remain;
+	static char	*rest;
 	t_list		*last;
-	static int	check_error;
+	int			pos;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd == 1000)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	head = ft_lstnew(remain, 1, check_error);
+	head = ft_lstnew(rest, 1, &pos);
 	last = head;
-	if (head != NULL)
-		check_error = read_file(&last, fd);
-	if (head == NULL || head->bytes_read == 0)
+	next_line = read_file(&head, &last, fd, rest);
+	if (next_line == NULL && head->content == NULL && head->bytes <= 0)
 	{
 		ft_free(&head);
 		return (NULL);
 	}
-	if (check_error == -1)
-		next_line = ft_substr(last->content, 0, find_line(last->content) + 1);
-	else
-		next_line = ft_get_line(&head, last->content, 0, 0);
-	remain = remain_line(&last, last->content);
+	pos = get_line(last->content);
+	rest = ft_substr(last->content, pos,
+			ft_strlen(last->content + pos), 1);
 	ft_free(&head);
 	return (next_line);
 }
