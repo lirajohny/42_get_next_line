@@ -6,7 +6,7 @@
 /*   By: jlira <jlira@student.42.rj>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 20:17:03 by jlira             #+#    #+#             */
-/*   Updated: 2023/12/07 05:33:04 by jlira            ###   ########.fr       */
+/*   Updated: 2023/12/07 11:53:17 by jlira            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	ft_free(t_list **list)
 	list = NULL;
 }
 
-#include <stdio.h>
 char	*ft_substr(char *s, unsigned int start, size_t len, int check)
 {
 	size_t	i;
@@ -36,8 +35,6 @@ char	*ft_substr(char *s, unsigned int start, size_t len, int check)
 	size_t	size;
 
 	size = 0;
-//	printf("total size is %li | start is %li | total len is %li\n", (long int)size, (long int)start, (long int)len);
-//	printf("\033[1;32m  string is: \033[0m |\033[1;34m %s \033[0m|\n", s);
 	if (!s)
 		return (NULL);
 	if (check == 1 && (!s || len == 0 || start == 0))
@@ -60,7 +57,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len, int check)
 	return (str);
 }
 
-t_list	*ft_lstnew(char *content, int bytes)
+t_list	*ft_lstnew(char *content, int bytes, int *i)
 {
 	t_list	*new_node;
 	char	*new_string;
@@ -80,8 +77,9 @@ t_list	*ft_lstnew(char *content, int bytes)
 			return (NULL);
 	}
 	new_node->content = new_string;
-	new_node->bytes_read = bytes;
+	new_node->bytes = bytes;
 	new_node->next = NULL;
+	*i = *i + 1;
 	free(content);
 	return (new_node);
 }

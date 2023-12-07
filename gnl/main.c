@@ -5,12 +5,18 @@
 #include <string.h>
 #include <unistd.h>
 
-int main(void) {
+int main(int ac, char **av) {
   int fd;
   int fd_out;
   char *str;
 
-  fd = open("multiple", O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR);
+  if (ac < 2) {
+	  fprintf(stderr, "Uso: %s <conteudo_do_arquivo>\n", av[0]);
+	  return 1;
+  }
+
+  char *file_open = av[1];
+  fd = open(file_open, O_RDONLY | O_CREAT, S_IRUSR | S_IWUSR);
   if (fd == -1) {
     // printf("erro while opening input file\n");
     close(fd);
