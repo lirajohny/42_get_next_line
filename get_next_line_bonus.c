@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -66,7 +66,7 @@ char	*fetch_line(struct s_list **list)
 	i = 0;
 	while (current->next != NULL)
 	{
-		len += BUFFER_SIZE; 
+		len += BUFFER_SIZE;
 		current = current->next;
 	}
 	i = get_line(current->content);

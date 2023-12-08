@@ -66,7 +66,7 @@ char	*fetch_line(struct s_list **list)
 	i = 0;
 	while (current->next != NULL)
 	{
-		len += BUFFER_SIZE; 
+		len += BUFFER_SIZE;
 		current = current->next;
 	}
 	i = get_line(current->content);
